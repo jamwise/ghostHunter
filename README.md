@@ -9,6 +9,8 @@ GhostHunter has at its core [lunr.js](http://lunrjs.com). And thanks to this pow
 
 Although GhostHunter is designed specifically for the Ghost blogging platform, it will work on any system which uses an rss feed.
 
+If you find it useful, I'd love to hear how you used it, what challenges there were and how I could make it better: jamal@i11u.me
+
 ##Usage
 
 After including jQuery, include ghostHunter:
