@@ -6,6 +6,8 @@ A Ghost blog search engine
 
 GhostHunter allows any theme developer to add search capabilities right in their blog without having to resort to any third-party solutions. 
 
+GhostHunter has at its core [lunr.js](http://lunrjs.com). And thanks to this powerful search engine, GhostHunter provides full text searching.
+
 Although GhostHunter is designed specifically for the Ghost blogging platform, it will work on any system which uses an rss feed.
 
 ##Usage
@@ -31,3 +33,8 @@ Now we can turn on the plugin, and that's all there is to it:
       results   : "#results"
     });
     
+##How it works
+
+GhostHunter will attach itself to your search input field and wait for it to be focused on. Once focus has gone to the field, the engine quickly gets to work building an index of your rss feed that can easily be searched. When your visitor submits the form, GhostHunter will use either a default template or one provided by you to fill in your results element.
+
+##Advanced features
