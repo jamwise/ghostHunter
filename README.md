@@ -69,3 +69,10 @@ And of course, both can be included together:
 		info_template	: "<p>Number of posts found: {{amount}}</p>",
 		result_template : "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4>{{description}}</p></a>"
     });
+
+If the rss feed on your website is different than a standard ghost installation `\rss` you can specify that in the options:
+
+	$("#search-field").ghostHunter({
+		results   		: "#results",
+		rss 			: "/path/to/rss.xml"
+	});
