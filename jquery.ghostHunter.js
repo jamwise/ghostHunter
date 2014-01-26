@@ -1,3 +1,9 @@
+/**
+ * ghostHunter - 0.1
+ * Copyright (C) 2014 Jamal Neufeld (jamal@i11u.me)
+ * MIT Licensed
+ * @license
+ */
 (function( $ ) {
 
 	/* The lunr 0.4.3 library is included here to perform the fulltext searching. lunr is copyright (C) 2013 Oliver Nightingale. MIT Licensed */
