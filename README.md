@@ -14,7 +14,7 @@ After including jQuery, include ghostHunter:
 
     <script src="js/jquery.ghostHunter.min.js"></script>
   
-In your theme you'll need an <input> for the search query, the input should be in a <form> and you can use the form's submit functionality to call the search. This will work whether you have a standard submit button or if you use submit() in javascript.
+In your theme you'll need an \\<input> for the search query, the input should be in a \\<form> and you can use the form's submit functionality to call the search. This will work whether you have a standard submit button or if you use submit() in javascript.
 
     <form>
       <input id="search-field" />
