@@ -14,13 +14,14 @@
 	 
 	 	//Here we use jQuery's extend to set default values if they weren't set by the user
 	    var opts 		= $.extend( {}, $.fn.ghostHunter.defaults, options );
-	    if( opts.results ) pluginMethods.init( this , opts.rss , opts.results , opts.result_template , opts.info_template );
+	    if( opts.results ) pluginMethods.init( this , opts );
 
 	};
 	 
 	$.fn.ghostHunter.defaults = {
 		results 		: false,
 		rss 			: "/rss",
+		onKeyUp 		: false,
 		result_template : "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4></p></a>",
 		info_template	: "<p>Number of posts found: {{amount}}</p>"
 	};
@@ -29,15 +30,15 @@
 
 		isInit 			: false,
 
-		init 			: function( target , rss , results , result_template , info_template ){
+		init 			: function( target , opts ){
 
 			var that 				= this;
 			this.target 			= target;
-			this.rss 				= rss;
-			this.results 			= results;
+			this.rss 				= opts.rss;
+			this.results 			= opts.results;
 			this.blogData 			= [];
-			this.result_template 	= result_template;
-			this.info_template 		= info_template;
+			this.result_template 	= opts.result_template;
+			this.info_template 		= opts.info_template;
 
 			//This is where we'll build the index for later searching. It's not a big deal to build it on every load as it takes almost no space without data
 			this.index = lunr(function () {
@@ -56,6 +57,14 @@
 				e.preventDefault();
 				that.find(target.val());
 			});
+
+			if( opts.onKeyUp ) {
+				that.loadRSS();
+				target.keyup(function() {
+					that.find(target.val());
+				});
+
+			}
 
 		},
 
@@ -99,9 +108,6 @@
 			var searchResult = this.index.search( value );
 			var results = $(this.results)
 			results.empty();
-
-			console.log({"amount":searchResult.length});
-
 			results.append(this.format(this.info_template,{"amount":searchResult.length}));
 
 			for (var i = 0; i < searchResult.length; i++)
