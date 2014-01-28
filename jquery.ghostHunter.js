@@ -23,11 +23,12 @@
 	};
 	 
 	$.fn.ghostHunter.defaults = {
-		results 		: false,
-		rss 			: "/rss",
-		onKeyUp 		: false,
-		result_template : "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4></p></a>",
-		info_template	: "<p>Number of posts found: {{amount}}</p>"
+		results 			: false,
+		rss 				: "/rss",
+		onKeyUp 			: false,
+		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4></p></a>",
+		info_template		: "<p>Number of posts found: {{amount}}</p>",
+		zeroResultsInfo		: true
 	};
 
 	var pluginMethods 	= {
@@ -43,6 +44,7 @@
 			this.blogData 			= [];
 			this.result_template 	= opts.result_template;
 			this.info_template 		= opts.info_template;
+			this.zeroResultsInfo 	= opts.zeroResultsInfo;
 
 			//This is where we'll build the index for later searching. It's not a big deal to build it on every load as it takes almost no space without data
 			this.index = lunr(function () {
@@ -110,9 +112,12 @@
 
 		find 		 	: function( value ){
 			var searchResult = this.index.search( value );
-			var results = $(this.results)
+			var results = $(this.results);
 			results.empty();
-			results.append(this.format(this.info_template,{"amount":searchResult.length}));
+			if(this.zeroResultsInfo || searchResult.length > 0)
+			{
+				results.append(this.format(this.info_template,{"amount":searchResult.length}));
+			}
 
 			for (var i = 0; i < searchResult.length; i++)
 			{
