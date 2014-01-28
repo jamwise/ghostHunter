@@ -53,6 +53,19 @@ You can have the search results appear "as you type". Simply pass the onKeyUp pa
 		onKeyUp 		: true
     });
 
+###Clearing the results
+
+You can use ghostHunter to clear the results of your query. ghostHunter will return an object relating to your search field and you can use that object to clear results.
+
+	var searchField = 	$("#search-field").ghostHunter({
+							results   		: "#results",
+							onKeyUp 		: true
+					    });
+
+Now that the object is available to your code you can call it any time to clear your results:
+
+	searchField.clear();
+
 ###Customizing the html template
 
 The **result template** has access to these variables: title, description, link, pubDate.
