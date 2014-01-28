@@ -66,6 +66,8 @@ Now that the object is available to your code you can call it any time to clear 
 
 	searchField.clear();
 
+###Displaying the search info
+
 ###Customizing the html template
 
 The **result template** has access to these variables: title, description, link, pubDate.

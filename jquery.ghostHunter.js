@@ -28,6 +28,7 @@
 		onKeyUp 			: false,
 		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
+		displaySearchInfo 	: true,
 		zeroResultsInfo		: true
 	};
 
@@ -45,6 +46,7 @@
 			this.result_template 	= opts.result_template;
 			this.info_template 		= opts.info_template;
 			this.zeroResultsInfo 	= opts.zeroResultsInfo;
+			this.displaySearchInfo  = opts.displaySearchInfo;
 
 			//This is where we'll build the index for later searching. It's not a big deal to build it on every load as it takes almost no space without data
 			this.index = lunr(function () {
@@ -114,9 +116,10 @@
 			var searchResult = this.index.search( value );
 			var results = $(this.results);
 			results.empty();
+
 			if(this.zeroResultsInfo || searchResult.length > 0)
 			{
-				results.append(this.format(this.info_template,{"amount":searchResult.length}));
+				if(this.displaySearchInfo) results.append(this.format(this.info_template,{"amount":searchResult.length}));
 			}
 
 			for (var i = 0; i < searchResult.length; i++)
