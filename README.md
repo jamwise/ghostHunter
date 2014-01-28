@@ -66,7 +66,23 @@ Now that the object is available to your code you can call it any time to clear 
 
 	searchField.clear();
 
-###Displaying the search info
+###Hiding the search info
+
+If you don't want to show the search info at all you can pass this option
+
+	$("#search-field").ghostHunter({
+		results   			: "#results",
+		displaySearchInfo 	: false
+    });
+
+###Hiding the search info when the result is zero
+
+If you don't want to show the search info when the results are zero you can pass this option
+
+	$("#search-field").ghostHunter({
+		results   			: "#results",
+		zeroResultsInfo 	: false
+    });
 
 ###Customizing the html template
 
