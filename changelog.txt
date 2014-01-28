@@ -1,0 +1,2 @@
+0.2: Added ability to have search occur onKeyUp
+0.1: Initial commit, fully functional alpha
