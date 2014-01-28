@@ -1,5 +1,5 @@
 /**
- * ghostHunter - 0.2
+ * ghostHunter - 0.2.2
  * Copyright (C) 2014 Jamal Neufeld (jamal@i11u.me)
  * MIT Licensed
  * @license
@@ -14,7 +14,11 @@
 	 
 	 	//Here we use jQuery's extend to set default values if they weren't set by the user
 	    var opts 		= $.extend( {}, $.fn.ghostHunter.defaults, options );
-	    if( opts.results ) pluginMethods.init( this , opts );
+	    if( opts.results ) 
+    	{
+    		pluginMethods.init( this , opts );
+    		return pluginMethods;
+    	}
 
 	};
 	 
@@ -115,6 +119,11 @@
 				var postData  	= this.blogData[searchResult[i].ref - 1];
 				results.append(this.format(this.result_template,postData));
 			}
+		},
+
+		clear 			: function(){
+			$(this.results).empty();
+			this.target.val("");
 		},
 
 		format 			: function (t, d) {
