@@ -44,6 +44,15 @@ GhostHunter can be customized to a certain extent using very simple templating.
 
 If you'd like to customize the html of the results there are two options:
 
+###Having search results appear on key up
+
+You can have the search results appear "as you type". Simply pass the onKeyUp parameter as true
+
+	$("#search-field").ghostHunter({
+		results   		: "#results",
+		onKeyUp 		: true
+    });
+
 ###Customizing the html template
 
 The **result template** has access to these variables: title, description, link, pubDate.
