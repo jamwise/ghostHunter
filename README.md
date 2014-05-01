@@ -53,6 +53,26 @@ You can have the search results appear "as you type". Simply pass the onKeyUp pa
 		onKeyUp 		: true
     });
 
+###Adding callbacks
+
+You can have Ghost Hunter call your callback funciton at two points. The first is right before it renders the information onto the page using the "before" option:
+
+	$("#search-field").ghostHunter({
+		results   		: "#results",
+		before 			: function(){
+			alert("results are about to be rendered");
+		}
+    });
+
+The other callback is "onComplete" and gets called when the results have been rendered:
+
+	$("#search-field").ghostHunter({
+		results   		: "#results",
+		onComplete		: function(){
+			alert("results have been rendered");
+		}
+    });
+
 ###Clearing the results
 
 You can use ghostHunter to clear the results of your query. ghostHunter will return an object relating to your search field and you can use that object to clear results.
