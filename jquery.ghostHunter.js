@@ -57,6 +57,7 @@
 			    this.field('title', {boost: 10});
 			    this.field('description');
 			    this.field('link');
+			    this.field('category');
 			    this.field('pubDate');
 			    this.ref('id');
 			});
@@ -102,6 +103,7 @@
 						id: i+1,
 						title 		: post.find('title').text(),
 						description	: post.find('description').text(),
+						category 	: post.find('category').text(),
 						pubDate 	: post.find('pubDate').text(),
 						link 		: post.find('link').text()
 					};
