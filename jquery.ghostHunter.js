@@ -29,7 +29,9 @@
 		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
 		displaySearchInfo 	: true,
-		zeroResultsInfo		: true
+		zeroResultsInfo		: true,
+		before 				: false,
+		onComplete 			: false
 	};
 
 	var pluginMethods 	= {
@@ -47,6 +49,8 @@
 			this.info_template 		= opts.info_template;
 			this.zeroResultsInfo 	= opts.zeroResultsInfo;
 			this.displaySearchInfo  = opts.displaySearchInfo;
+			this.before 			= opts.before;
+			this.onComplete 		= opts.onComplete;
 
 			//This is where we'll build the index for later searching. It's not a big deal to build it on every load as it takes almost no space without data
 			this.index = lunr(function () {
@@ -113,9 +117,14 @@
 		},
 
 		find 		 	: function( value ){
-			var searchResult = this.index.search( value );
-			var results = $(this.results);
+			var searchResult 	= this.index.search( value );
+			var results 		= $(this.results);
+			var resultsData 	= [];
 			results.empty();
+
+			if(this.before) {
+				this.before();
+			};
 
 			if(this.zeroResultsInfo || searchResult.length > 0)
 			{
@@ -126,7 +135,12 @@
 			{
 				var postData  	= this.blogData[searchResult[i].ref - 1];
 				results.append(this.format(this.result_template,postData));
+				resultsData.push(postData);
 			}
+
+			if(this.onComplete) {
+				this.onComplete(resultsData);
+			};
 		},
 
 		clear 			: function(){

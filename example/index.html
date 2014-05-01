@@ -25,15 +25,15 @@
       <section id="results"></section>
 
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-      <script src="../jquery.ghostHunter.min.js"></script>
+      <script src="../jquery.ghostHunter.js"></script>
 
       <script>
 
         var searchField = $("#search-field").ghostHunter({
-                            results   : "#results",
-                            rss       : "rss.xml",
+                            results     : "#results",
+                            rss         : "rss.xml",
                             //Enable the "search as you type" by uncommenting the following line
-                            //onKeyUp   : true 
+                            //onKeyUp   : true
                           });
 
         function clearResults() {
