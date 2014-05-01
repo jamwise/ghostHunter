@@ -64,11 +64,12 @@ You can have Ghost Hunter call your callback funciton at two points. The first i
 		}
     });
 
-The other callback is "onComplete" and gets called when the results have been rendered:
+The other callback is "onComplete" and gets called when the results have been rendered. It also provides an array of all the results:
 
 	$("#search-field").ghostHunter({
 		results   		: "#results",
-		onComplete		: function(){
+		onComplete		: function( results ){
+			console.log( results );
 			alert("results have been rendered");
 		}
     });
