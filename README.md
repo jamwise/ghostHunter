@@ -1,3 +1,5 @@
+**I'm awaiting Ghost's Apps/Plugins which is currently in their backlog to resolve some major issues GhostHunter has with Ghost. Please only use this if you have a small blog.**
+
 #GhostHunter
 A Ghost blog search engine
 
