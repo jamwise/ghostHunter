@@ -57,7 +57,7 @@ You can have the search results appear "as you type". Simply pass the onKeyUp pa
 
 ###Adding callbacks
 
-You can have Ghost Hunter call your callback funciton at two points. The first is right before it renders the information onto the page using the "before" option:
+You can have Ghost Hunter call your callback function at two points. The first is right before it renders the information onto the page using the "before" option:
 
 	$("#search-field").ghostHunter({
 		results   		: "#results",
