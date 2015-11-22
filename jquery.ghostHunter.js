@@ -99,11 +99,19 @@
 
 		    	for (var i = 0; posts && i < posts.length; i++) {
 			        var post  		= posts.eq(i);
-			        var parsedData 	= {
+
+					// Separate multiple tags by comma
+					var categories	= [];
+					post.find('category').each(function(i, o){
+						categories.push($(o).text());
+					});
+					categories		= categories.join(', ');
+					
+					var parsedData	= {
 						id: i+1,
 						title 		: post.find('title').text(),
 						description	: post.find('description').text(),
-						category 	: post.find('category').text(),
+						category 	: categories,
 						pubDate 	: post.find('pubDate').text(),
 						link 		: post.find('link').text()
 					};
