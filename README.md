@@ -1,4 +1,13 @@
-**I'm awaiting Ghost's Apps/Plugins which is currently in their backlog to resolve some major issues GhostHunter has with Ghost. Please only use this if you have a small blog.**
+**This tool has just  been updated to work with Ghost's API. To quote the Ghost team, "The API is still under very (very) heavy development and subject to regular breaking changes."**
+
+**If performance is an issue, you should probably remove the "markdown" field from the index and the API query.**
+**Note that "tags" are not included in the search for now.**
+
+#ToDo
+- Restrict the number of fields being queried from the API. Waiting on some API corrections by the Ghost team.
+- Add the possibility to build the index on the server at a set time, and query that index instead of building it every time the page loads
+- Allow switching between building the index live and the aforementioned function.
+- In the distant future, build a GUI to set which fields can be queried, how much to boost their importance, etc. Why not integrate that directly with Ghost while we're at it.
 
 #GhostHunter
 A Ghost blog search engine
@@ -9,9 +18,7 @@ GhostHunter allows any theme developer to add search capabilities right in their
 
 GhostHunter has at its core [lunr.js](http://lunrjs.com). And thanks to this powerful search engine, GhostHunter provides full text searching.
 
-Although GhostHunter is designed specifically for the Ghost blogging platform, it will work on any system which uses an rss feed.
-
-If you find it useful, I'd love to hear how you used it, what challenges there were and how I could make it better: jamal@i11u.me
+original developer : jamal@i11u.me
 
 ##Usage
 
@@ -38,7 +45,7 @@ Now we can turn on the plugin, and that's all there is to it:
     
 ##How it works
 
-GhostHunter will attach itself to your search input field and wait for it to be focused on. Once focus has gone to the field, the engine quickly gets to work building an index of your rss feed that can easily be searched. When your visitor submits the form, GhostHunter will use either a default template or one provided by you to fill in your results element.
+GhostHunter will attach itself to your search input field and wait for it to be focused on. Once focus has gone to the field, the engine quickly gets to work building an index of your ghost posts that can easily be searched. When your visitor submits the form, GhostHunter will use either a default template or one provided by you to fill in your results element.
 
 ##Advanced features
 
@@ -57,7 +64,7 @@ You can have the search results appear "as you type". Simply pass the onKeyUp pa
 
 ###Adding callbacks
 
-You can have Ghost Hunter call your callback funciton at two points. The first is right before it renders the information onto the page using the "before" option:
+You can have Ghost Hunter call your callback function at two points. The first is right before it renders the information onto the page using the "before" option:
 
 	$("#search-field").ghostHunter({
 		results   		: "#results",
@@ -135,9 +142,3 @@ And of course, both can be included together:
 		result_template : "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4>{{description}}</p></a>"
     });
 
-If the rss feed on your website is different than a standard ghost installation `\rss` you can specify that in the options:
-
-	$("#search-field").ghostHunter({
-		results   		: "#results",
-		rss 			: "/path/to/rss.xml"
-	});
