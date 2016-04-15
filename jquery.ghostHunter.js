@@ -59,6 +59,7 @@
 			    this.field('link')
 			    this.field('markdown', {boost: 5})
 			    this.field('pubDate')
+			    this.field('tag')
 			    this.ref('id')
 			});
 
@@ -92,15 +93,23 @@
 			var index 		= this.index,
 				blogData 	= this.blogData;
 
-	        $.get(ghost.url.api('posts', {limit: "all"})).done(function(data){
+	        $.get(ghost.url.api('posts', {limit: "all", include: "tags"})).done(function(data){
 	        	searchData = data.posts;
             	searchData.forEach(function(arrayItem){
+            		var tag_arr = arrayItem.tags.map(function(v) {
+	    			return v.name; // `tag` object has an `name` property which is the value of tag. If you also want other info, check API and get that property
+	    			})
+	    			var category = tag_arr.join(", ");
+	    			if (category.length < 1){
+	    			category = "undefined";
+					}
 			        var parsedData 	= {
 						id 			: String(arrayItem.id),
 						title 		: String(arrayItem.title),
 						description	: String(arrayItem.meta_description),
 						markdown 	: String(arrayItem.markdown),
 						pubDate 	: String(arrayItem.created_at),
+						tag 		: category,
 						link 		: String(arrayItem.url)
 					}
 

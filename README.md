@@ -1,13 +1,17 @@
 **This tool has just  been updated to work with Ghost's API. To quote the Ghost team, "The API is still under very (very) heavy development and subject to regular breaking changes."**
 
 **If performance is an issue, you should probably remove the "markdown" field from the index and the API query.**
-**Note that "tags" are not included in the search for now.**
+
+#Updated
+Searching through tags is now supported. Special thanks to @lizhuoli1126 for the help.
 
 #ToDo
-- Restrict the number of fields being queried from the API. Waiting on some API corrections by the Ghost team.
+- Restrict the number of fields being queried from the API.
+	Status @05/14/2016 : the bug has been closed by the Ghost team. Anyone downloading Ghost from Git can use the "filterfields" branch of this fork. All others : wait for the ghost release O.8.0
+
 - Add the possibility to build the index on the server at a set time, and query that index instead of building it every time the page loads
 - Allow switching between building the index live and the aforementioned function.
-- In the distant future, build a GUI to set which fields can be queried, how much to boost their importance, etc. Why not integrate that directly with Ghost while we're at it.
+- In the distant future, build a GUI to set which fields can be queried, how much to boost their importance, etc.
 
 #GhostHunter
 A Ghost blog search engine
