@@ -1,9 +1,13 @@
+![Version](https://img.shields.io/badge/Version-0.3.1-blue.svg)
+![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%200.7.x-red.svg)
+
 **This tool has just  been updated to work with Ghost's API. To quote the Ghost team, "The API is still under very (very) heavy development and subject to regular breaking changes."**
 
 **If performance is an issue, you should probably remove the "markdown" field from the index and the API query.**
 
 #Updated
 Searching through tags is now supported. Special thanks to @lizhuoli1126 for the help.
+Added the prettypubdate as coded by @alavers
 
 #ToDo
 - Restrict the number of fields being queried from the API.
