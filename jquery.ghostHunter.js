@@ -1,10 +1,8 @@
 /**
- * ghostHunter - 0.3.0
+ * ghostHunter - 0.3.1
  * Copyright (C) 2014 Jamal Neufeld (jamal@i11u.me)
  * MIT Licensed
  * @license
- * ToDo when the API is better handled : query only the necessary fields. For now, all fields are queried because there is no way to query the urlin a selector.
- * Note that this version queries the entire Markdown for each post, which is great for search but not for performance.
  */
 (function( $ ) {
 
@@ -27,12 +25,18 @@
 	$.fn.ghostHunter.defaults = {
 		results 			: false,
 		onKeyUp 			: false,
-		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4></p></a>",
+		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
 		displaySearchInfo 	: true,
 		zeroResultsInfo		: true,
 		before 				: false,
 		onComplete 			: false
+	};
+
+	var prettyDate = function(date) {
+		var d = new Date(date);
+		var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+			return d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
 	};
 
 	var pluginMethods 	= {
@@ -112,9 +116,12 @@
 						tag 		: category,
 						link 		: String(arrayItem.url)
 					}
+					
+					parsedData.prettyPubDate = prettyDate(parsedData.pubDate);
+					var tempdate = prettyDate(parsedData.pubDate);
 
 				    index.add(parsedData)
-				    blogData[arrayItem.id] = {title: arrayItem.title, description: arrayItem.meta_description, pubDate: arrayItem.created_at, link: arrayItem.url};
+				    blogData[arrayItem.id] = {title: arrayItem.title, description: arrayItem.meta_description, pubDate: tempdate, link: arrayItem.url};
             		});
 
 			});

@@ -4,6 +4,7 @@
 
 #Updated
 Searching through tags is now supported. Special thanks to @lizhuoli1126 for the help.
+Added the prettypubdate as coded by @alavers
 
 #ToDo
 - Restrict the number of fields being queried from the API.
