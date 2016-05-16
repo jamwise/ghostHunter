@@ -1,3 +1,5 @@
+v0.3.1  : Added tag support in the index.
+v0.3.0  : Stopped using RSS, started using API. Considered Beta.
 v0.2.3	: Added callbacks
 	  Added tags/categories to the indexed data
 v0.2.2	: Added the "clear" method
