@@ -11,7 +11,8 @@ Added the prettypubdate as coded by @alavers
 
 #ToDo
 - Restrict the number of fields being queried from the API.
-	Status @05/14/2016 : the bug has been closed by the Ghost team. Anyone downloading Ghost from Git can use the "filterfields" branch of this fork. All others : wait for the ghost release O.8.0
+	~~Status @05/14/2016 : the bug has been closed by the Ghost team. Anyone downloading Ghost from Git can use the "filterfields" branch of this fork. All others : wait for the ghost release O.8.0~~
+	Status @26/05/2016 : the bug has been reopened on the Ghost end. Waiting for resolution of bug #6625 @TryGhost.
 
 - Add the possibility to build the index on the server at a set time, and query that index instead of building it every time the page loads
 - Allow switching between building the index live and the aforementioned function.
