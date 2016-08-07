@@ -107,6 +107,7 @@
             		var tag_arr = arrayItem.tags.map(function(v) {
 	    			return v.name; // `tag` object has an `name` property which is the value of tag. If you also want other info, check API and get that property
 	    			})
+            		if(arrayItem.meta_description == null) { arrayItem.meta_description = '' };
 	    			var category = tag_arr.join(", ");
 	    			if (category.length < 1){
 	    			category = "undefined";
