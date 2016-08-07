@@ -24,6 +24,7 @@
 	 
 	$.fn.ghostHunter.defaults = {
 		results 			: false,
+		onPageLoad		: false,
 		onKeyUp 			: false,
 		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
@@ -67,9 +68,13 @@
 			    this.ref('id')
 			});
 
-			target.focus(function(){
+			if ( opts.onPageLoad ) {
 				that.loadAPI();
-			});
+			} else {
+				target.focus(function(){
+					that.loadAPI();
+				});
+			}
 
 			target.closest("form").submit(function(e){
 				e.preventDefault();
@@ -77,7 +82,6 @@
 			});
 
 			if( opts.onKeyUp ) {
-				that.loadAPI();
 				target.keyup(function() {
 					that.find(target.val());
 				});

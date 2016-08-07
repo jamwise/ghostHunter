@@ -56,7 +56,7 @@ Now we can turn on the plugin, and that's all there is to it:
 ````
 ##How it works
 
-GhostHunter will attach itself to your search input field and wait for it to be focused on. Once focus has gone to the field, the engine quickly gets to work building an index of your ghost posts that can easily be searched. When your visitor submits the form, GhostHunter will use either a default template or one provided by you to fill in your results element.
+GhostHunter will attach itself to your search input field and wait for it to be focused on unless onPageLoad is set to "true". Once focus has gone to the field, the engine quickly gets to work building an index of your ghost posts that can easily be searched. When your visitor submits the form, GhostHunter will use either a default template or one provided by you to fill in your results element.
 
 ##Advanced features
 
@@ -71,6 +71,15 @@ You can have the search results appear "as you type". Simply pass the onKeyUp pa
 	$("#search-field").ghostHunter({
 		results   		: "#results",
 		onKeyUp 		: true
+    });
+````
+###Preparing the search results with an API call on page-load
+
+You can have the api called when the page loads if the field is automatically in focus. Pass the onPageLoad parameter as true
+````js
+	$("#search-field").ghostHunter({
+		results   		: "#results",
+		onPageLoad 		: true
     });
 ````
 ###Adding callbacks
