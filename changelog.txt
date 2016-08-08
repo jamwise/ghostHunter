@@ -1,5 +1,8 @@
-v0.3.1  : Added tag support in the index.
-v0.3.0  : Stopped using RSS, started using API. Considered Beta.
+v0.3.4	: Exported query options ; added option to search static pages
+v0.3.3 	: Exported Lunr to a separate js file ; made the no-dependency version available.
+v0.3.2	: Added PrettyDate option thanks to @alavers
+v0.3.1  : Added tag support in the index thanks to @lizhuoli1126
+v0.3.0  : Stopped using RSS, started using API.
 v0.2.3	: Added callbacks
 	  Added tags/categories to the indexed data
 v0.2.2	: Added the "clear" method

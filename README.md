@@ -1,22 +1,22 @@
-![Version](https://img.shields.io/badge/Version-0.3.1-blue.svg)
+![Version](https://img.shields.io/badge/Version-0.3.4-blue.svg)
 ![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%200.7.x-red.svg)
 
-**This tool has just  been updated to work with Ghost's API. To quote the Ghost team, "The API is still under very (very) heavy development and subject to regular breaking changes."**
+**This version of GhostHunter uses the Ghost API. If you need the RSS version you can use [this](https://github.com/jamalneufeld/ghostHunter/commit/2e721620868d127e9e688145fabcf5f86249d11b) commit, or @lizhuoli1126's [fork](https://github.com/dreampiggy/ghostHunter)**
 
 **If performance is an issue, you should probably remove the "markdown" field from the index and the API query.**
 
 #Updated
-Searching through tags is now supported. Special thanks to @lizhuoli1126 for the help.
-Added the prettypubdate as coded by @alavers
+Added the option to search through static pages.
 
 #ToDo
-- Restrict the number of fields being queried from the API.
-	~~Status @05/14/2016 : the bug has been closed by the Ghost team. Anyone downloading Ghost from Git can use the "filterfields" branch of this fork. All others : wait for the ghost release O.8.0~~
-	Status @26/05/2016 : the bug has been reopened on the Ghost end. Waiting for resolution of bug #6625 @TryGhost.
+~~- Restrict the number of fields being queried from the API.~~
 
-- Add the possibility to build the index on the server at a set time, and query that index instead of building it every time the page loads
-- Allow switching between building the index live and the aforementioned function.
-- In the distant future, build a GUI to set which fields can be queried, how much to boost their importance, etc.
+[It is currently not possible to limit the number of fields queried and include tags at the same time.](https://github.com/TryGhost/Ghost/issues/5615)
+The performance gain associated with the field filtering could be attained by using a WebWorker.
+The branch "filterfields" will as such be put on hold for now.
+
+- Use a WebWorker to build the index as discussed in issue [#21](https://github.com/jamalneufeld/ghostHunter/issues/21)
+- In the distant future, simplify the way options are set to allow end-users to fine-tune their search experience.
 
 #GhostHunter
 A Ghost blog search engine
@@ -62,7 +62,18 @@ GhostHunter will attach itself to your search input field and wait for it to be 
 
 GhostHunter can be customized to a certain extent using very simple templating. 
 
-If you'd like to customize the html of the results there are two options:
+
+###Include static pages in the search
+
+You can include static pages in your search. By default, this is set to FALSE.
+
+````js
+	$("#search-field").ghostHunter({
+		results   		: "#results",
+		includepages 	: true
+    });
+````
+
 
 ###Having search results appear on key up
 
