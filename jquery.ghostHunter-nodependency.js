@@ -24,7 +24,7 @@
 	 
 	$.fn.ghostHunter.defaults = {
 		results 			: false,
-		onPageLoad		: false,
+		onPageLoad			: false,
 		onKeyUp 			: false,
 		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
