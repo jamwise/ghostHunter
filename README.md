@@ -1,12 +1,13 @@
-![Version](https://img.shields.io/badge/Version-0.3.4-blue.svg)
+![Version](https://img.shields.io/badge/Version-0.3.5-blue.svg)
 ![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%200.7.x-red.svg)
 
 **This version of GhostHunter uses the Ghost API. If you need the RSS version you can use [this](https://github.com/jamalneufeld/ghostHunter/commit/2e721620868d127e9e688145fabcf5f86249d11b) commit, or @lizhuoli1126's [fork](https://github.com/dreampiggy/ghostHunter)**
 
-**If performance is an issue, you should probably remove the "markdown" field from the index and the API query.**
+**If performance is an issue, you should probably remove the "markdown" field from the index.**
 
 #Updated
-Added the option to search through static pages.
+- Added the option to search through static pages.
+- Added onPageLoad option to improve onKeyUp option thanks to @cjsheets.
 
 #ToDo
 ~~- Restrict the number of fields being queried from the API.~~
@@ -86,7 +87,8 @@ You can have the search results appear "as you type". Simply pass the onKeyUp pa
 ````
 ###Preparing the search results with an API call on page-load
 
-You can have the api called when the page loads if the field is automatically in focus. Pass the onPageLoad parameter as true
+You can have the api called when the page loads if the field is automatically in focus. Pass the onPageLoad parameter as true.
+For big blogs, this option should be set to True when using onKeyUp. This will increase the loading time of your blog page but will prevent excessive loading times when starting to type a request.
 ````js
 	$("#search-field").ghostHunter({
 		results   		: "#results",

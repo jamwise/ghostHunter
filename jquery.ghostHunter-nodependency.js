@@ -1,9 +1,9 @@
 /**
- * ghostHunter - 0.3.1
+* ghostHunter - 0.3.5
  * Copyright (C) 2014 Jamal Neufeld (jamal@i11u.me)
  * MIT Licensed
  * @license
- */
+*/
 (function( $ ) {
 
 	/* Include the Lunr library */
@@ -23,8 +23,9 @@
 	 
 	$.fn.ghostHunter.defaults = {
 		resultsData			: false,
+		onPageLoad			: false,
 		onKeyUp				: false,
-		result_template		: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
+		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
 		displaySearchInfo	: true,
 		zeroResultsInfo		: true,
@@ -33,7 +34,6 @@
 		includepages		: false,
 		filterfields		: false
 	};
-
 	var prettyDate = function(date) {
 		var d = new Date(date);
 		var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -69,9 +69,13 @@
 				this.ref('id')
 			});
 
-			target.focus(function(){
+			if ( opts.onPageLoad ) {
 				that.loadAPI();
-			});
+			} else {
+				target.focus(function(){
+					that.loadAPI();
+				});
+			}
 
 			target.closest("form").submit(function(e){
 				e.preventDefault();
@@ -79,7 +83,6 @@
 			});
 
 			if( opts.onKeyUp ) {
-				that.loadAPI();
 				target.keyup(function() {
 					that.find(target.val());
 				});
@@ -110,6 +113,7 @@
 					var tag_arr = arrayItem.tags.map(function(v) {
 						return v.name; // `tag` object has an `name` property which is the value of tag. If you also want other info, check API and get that property
 					})
+					if(arrayItem.meta_description == null) { arrayItem.meta_description = '' };
 					var category = tag_arr.join(", ");
 					if (category.length < 1){
 						category = "undefined";
@@ -123,8 +127,10 @@
 						tag 		: category,
 						link 		: String(arrayItem.url)
 					}
+					
 					parsedData.prettyPubDate = prettyDate(parsedData.pubDate);
 					var tempdate = prettyDate(parsedData.pubDate);
+
 					index.add(parsedData)
 					blogData[arrayItem.id] = {title: arrayItem.title, description: arrayItem.meta_description, pubDate: tempdate, link: arrayItem.url};
 				});
