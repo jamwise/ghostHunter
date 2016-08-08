@@ -1,9 +1,9 @@
 /**
- * ghostHunter - 0.3.1
+* ghostHunter - 0.3.5
  * Copyright (C) 2014 Jamal Neufeld (jamal@i11u.me)
  * MIT Licensed
  * @license
- */
+*/
 (function( $ ) {
 
 	/* Include the Lunr library */
@@ -11,61 +11,62 @@
 
 	//This is the main plugin definition
 	$.fn.ghostHunter 	= function( options ) {
-	 
-	 	//Here we use jQuery's extend to set default values if they weren't set by the user
-	    var opts 		= $.extend( {}, $.fn.ghostHunter.defaults, options );
-	    if( opts.results ) 
-    	{
-    		pluginMethods.init( this , opts );
-    		return pluginMethods;
-    	}
 
+		//Here we use jQuery's extend to set default values if they weren't set by the user
+		var opts 		= $.extend( {}, $.fn.ghostHunter.defaults, options );
+		if( opts.results ) 
+		{
+			pluginMethods.init( this , opts );
+			return pluginMethods;
+		}
 	};
 	 
 	$.fn.ghostHunter.defaults = {
-		results 			: false,
+		resultsData			: false,
 		onPageLoad			: false,
-		onKeyUp 			: false,
+		onKeyUp				: false,
 		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
-		displaySearchInfo 	: true,
+		displaySearchInfo	: true,
 		zeroResultsInfo		: true,
-		before 				: false,
-		onComplete 			: false
+		before				: false,
+		onComplete			: false,
+		includepages		: false,
+		filterfields		: false
 	};
-
 	var prettyDate = function(date) {
 		var d = new Date(date);
 		var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 			return d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
 	};
 
-	var pluginMethods 	= {
+	var pluginMethods	= {
 
-		isInit 			: false,
+		isInit			: false,
 
-		init 			: function( target , opts ){
-
-			var that 				= this;
-			this.target 			= target;
-			this.results 			= opts.results;
-			this.blogData 			= {};
-			this.result_template 	= opts.result_template;
-			this.info_template 		= opts.info_template;
-			this.zeroResultsInfo 	= opts.zeroResultsInfo;
-			this.displaySearchInfo  = opts.displaySearchInfo;
-			this.before 			= opts.before;
-			this.onComplete 		= opts.onComplete;
+		init			: function( target , opts ){
+			var that				= this;
+			this.target				= target;
+			this.results			= opts.results;
+			this.blogData			= {};
+			this.result_template	= opts.result_template;
+			this.info_template		= opts.info_template;
+			this.zeroResultsInfo	= opts.zeroResultsInfo;
+			this.displaySearchInfo	= opts.displaySearchInfo;
+			this.before				= opts.before;
+			this.onComplete			= opts.onComplete;
+			this.includepages		= opts.includepages;
+			this.filterfields		= opts.filterfields;
 
 			//This is where we'll build the index for later searching. It's not a big deal to build it on every load as it takes almost no space without data
 			this.index = lunr(function () {
-			    this.field('title', {boost: 10})
-			    this.field('description')
-			    this.field('link')
-			    this.field('markdown', {boost: 5})
-			    this.field('pubDate')
-			    this.field('tag')
-			    this.ref('id')
+				this.field('title', {boost: 10})
+				this.field('description')
+				this.field('link')
+				this.field('markdown', {boost: 5})
+				this.field('pubDate')
+				this.field('tag')
+				this.ref('id')
 			});
 
 			if ( opts.onPageLoad ) {
@@ -100,19 +101,24 @@
 			
 			var index 		= this.index,
 				blogData 	= this.blogData;
+				obj			= {limit: "all",  include: "tags"};
+							if  ( this.includepages ){
+								obj.filter="(page:true,page:false)";
+							}
 
-	        $.get(ghost.url.api('posts', {limit: "all", include: "tags"})).done(function(data){
-	        	searchData = data.posts;
-            	searchData.forEach(function(arrayItem){
-            		var tag_arr = arrayItem.tags.map(function(v) {
-	    			return v.name; // `tag` object has an `name` property which is the value of tag. If you also want other info, check API and get that property
-	    			})
-            		if(arrayItem.meta_description == null) { arrayItem.meta_description = '' };
-	    			var category = tag_arr.join(", ");
-	    			if (category.length < 1){
-	    			category = "undefined";
+
+			$.get(ghost.url.api('posts',obj)).done(function(data){
+				searchData = data.posts;
+				searchData.forEach(function(arrayItem){
+					var tag_arr = arrayItem.tags.map(function(v) {
+						return v.name; // `tag` object has an `name` property which is the value of tag. If you also want other info, check API and get that property
+					})
+					if(arrayItem.meta_description == null) { arrayItem.meta_description = '' };
+					var category = tag_arr.join(", ");
+					if (category.length < 1){
+						category = "undefined";
 					}
-			        var parsedData 	= {
+					var parsedData 	= {
 						id 			: String(arrayItem.id),
 						title 		: String(arrayItem.title),
 						description	: String(arrayItem.meta_description),
@@ -125,14 +131,11 @@
 					parsedData.prettyPubDate = prettyDate(parsedData.pubDate);
 					var tempdate = prettyDate(parsedData.pubDate);
 
-				    index.add(parsedData)
-				    blogData[arrayItem.id] = {title: arrayItem.title, description: arrayItem.meta_description, pubDate: tempdate, link: arrayItem.url};
-            		});
-
+					index.add(parsedData)
+					blogData[arrayItem.id] = {title: arrayItem.title, description: arrayItem.meta_description, pubDate: tempdate, link: arrayItem.url};
+				});
 			});
-
 			this.isInit = true;
-
 		},
 
 		find 		 	: function(value){
@@ -169,10 +172,10 @@
 		},
 
 		format 			: function (t, d) {
-	        return t.replace(/{{([^{}]*)}}/g, function (a, b) {
-	            var r = d[b];
-	            return typeof r === 'string' || typeof r === 'number' ? r : a;
-	        });
+			return t.replace(/{{([^{}]*)}}/g, function (a, b) {
+				var r = d[b];
+				return typeof r === 'string' || typeof r === 'number' ? r : a;
+			});
 		}
 	}
 
