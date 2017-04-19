@@ -5,11 +5,11 @@
 
 **If performance is an issue, you should probably remove the "markdown" field from the index.**
 
-#Updated
+# Updated
 - Added the option to search through static pages.
 - Added onPageLoad option to improve onKeyUp option thanks to @cjsheets.
 
-#ToDo
+# ToDo
 ~~- Restrict the number of fields being queried from the API.~~
 
 [It is currently not possible to limit the number of fields queried and include tags at the same time.](https://github.com/TryGhost/Ghost/issues/5615)
@@ -19,7 +19,7 @@ The branch "filterfields" will as such be put on hold for now.
 - Use a WebWorker to build the index as discussed in issue [#21](https://github.com/jamalneufeld/ghostHunter/issues/21)
 - In the distant future, simplify the way options are set to allow end-users to fine-tune their search experience.
 
-#GhostHunter
+# GhostHunter
 A Ghost blog search engine
 
 ==============
@@ -30,7 +30,7 @@ GhostHunter has at its core [lunr.js](http://lunrjs.com). And thanks to this pow
 
 original developer : jamal@i11u.me
 
-##Usage
+## Usage
 
 After including jQuery, include ghostHunter:
 
@@ -55,16 +55,16 @@ Now we can turn on the plugin, and that's all there is to it:
       results   : "#results"
     });
 ````
-##How it works
+## How it works
 
 GhostHunter will attach itself to your search input field and wait for it to be focused on unless onPageLoad is set to "true". Once focus has gone to the field, the engine quickly gets to work building an index of your ghost posts that can easily be searched. When your visitor submits the form, GhostHunter will use either a default template or one provided by you to fill in your results element.
 
-##Advanced features
+## Advanced features
 
 GhostHunter can be customized to a certain extent using very simple templating. 
 
 
-###Include static pages in the search
+### Include static pages in the search
 
 You can include static pages in your search. By default, this is set to FALSE.
 
@@ -76,7 +76,7 @@ You can include static pages in your search. By default, this is set to FALSE.
 ````
 
 
-###Having search results appear on key up
+### Having search results appear on key up
 
 You can have the search results appear "as you type". Simply pass the onKeyUp parameter as true
 ````js
@@ -85,7 +85,7 @@ You can have the search results appear "as you type". Simply pass the onKeyUp pa
 		onKeyUp 		: true
     });
 ````
-###Preparing the search results with an API call on page-load
+### Preparing the search results with an API call on page-load
 
 You can have the api called when the page loads if the field is automatically in focus. Pass the onPageLoad parameter as true.
 For big blogs, this option should be set to True when using onKeyUp. This will increase the loading time of your blog page but will prevent excessive loading times when starting to type a request.
@@ -95,7 +95,7 @@ For big blogs, this option should be set to True when using onKeyUp. This will i
 		onPageLoad 		: true
     });
 ````
-###Adding callbacks
+### Adding callbacks
 
 You can have Ghost Hunter call your callback function at two points. The first is right before it renders the information onto the page using the "before" option:
 ````js
@@ -117,7 +117,7 @@ The other callback is "onComplete" and gets called when the results have been re
     });
 ````
 
-###Clearing the results
+### Clearing the results
 
 You can use ghostHunter to clear the results of your query. ghostHunter will return an object relating to your search field and you can use that object to clear results.
 ````js
@@ -130,7 +130,7 @@ Now that the object is available to your code you can call it any time to clear 
 ````js
 	searchField.clear();
 ````
-###Hiding the search info
+### Hiding the search info
 
 If you don't want to show the search info at all you can pass this option
 ````js
@@ -139,7 +139,7 @@ If you don't want to show the search info at all you can pass this option
 		displaySearchInfo 	: false
     });
 ````
-###Hiding the search info when the result is zero
+### Hiding the search info when the result is zero
 
 If you don't want to show the search info when the results are zero you can pass this option
 ````js
@@ -148,7 +148,7 @@ If you don't want to show the search info when the results are zero you can pass
 		zeroResultsInfo 	: false
     });
 ````
-###Customizing the html template
+### Customizing the html template
 
 The **result template** has access to these variables: title, description, link, pubDate.
 
