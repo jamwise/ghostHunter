@@ -1,5 +1,6 @@
 ![Version](https://img.shields.io/badge/Version-0.3.5-blue.svg)
 ![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%200.7.x-red.svg)
+![MaxGhostVersion](https://img.shields.io/badge/Max%20Ghost%20v.-%3E%3D%200.x.x-red.svg)
 
 **This version of GhostHunter uses the Ghost API. If you need the RSS version you can use [this](https://github.com/jamalneufeld/ghostHunter/commit/2e721620868d127e9e688145fabcf5f86249d11b) commit, or @lizhuoli1126's [fork](https://github.com/dreampiggy/ghostHunter)**
 
