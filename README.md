@@ -1,24 +1,19 @@
 ![Version](https://img.shields.io/badge/Version-0.3.5-blue.svg)
-![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%200.7.x-red.svg)
-![MaxGhostVersion](https://img.shields.io/badge/Max%20Ghost%20v.-%3E%3D%200.x.x-red.svg)
+![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%201.x-red.svg)
 
 **This version of GhostHunter uses the Ghost API. If you need the RSS version you can use [this](https://github.com/jamalneufeld/ghostHunter/commit/2e721620868d127e9e688145fabcf5f86249d11b) commit, or @lizhuoli1126's [fork](https://github.com/dreampiggy/ghostHunter)**
 
-**If performance is an issue, you should probably remove the "markdown" field from the index.**
+
+**If performance is an issue, you should probably remove the "plaintext" field from the index.**
 
 # Updated
-- Added the option to search through static pages.
-- Added onPageLoad option to improve onKeyUp option thanks to @cjsheets.
+
+Compatibility with ghost v 1.0
 
 # ToDo
 ~~- Restrict the number of fields being queried from the API.~~
 
 [It is currently not possible to limit the number of fields queried and include tags at the same time.](https://github.com/TryGhost/Ghost/issues/5615)
-The performance gain associated with the field filtering could be attained by using a WebWorker.
-The branch "filterfields" will as such be put on hold for now.
-
-- Use a WebWorker to build the index as discussed in issue [#21](https://github.com/jamalneufeld/ghostHunter/issues/21)
-- In the distant future, simplify the way options are set to allow end-users to fine-tune their search experience.
 
 # GhostHunter
 A Ghost blog search engine
