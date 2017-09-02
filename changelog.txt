@@ -1,3 +1,4 @@
+v0.4.0  : Ghost 1.0 compatibility
 v0.3.5	: Exported query options ; added option to search static pages
 v0.3.4	: Added onPageLoad option to improve onKeyUp option thanks to @cjsheets.
 v0.3.3 	: Exported Lunr to a separate js file ; made the no-dependency version available.
