@@ -1,5 +1,5 @@
 /**
-* ghostHunter - 0.3.5
+* ghostHunter - 0.4.0
  * Copyright (C) 2014 Jamal Neufeld (jamal@i11u.me)
  * MIT Licensed
  * @license
@@ -23,7 +23,7 @@
 	 
 	$.fn.ghostHunter.defaults = {
 		resultsData			: false,
-		onPageLoad			: false,
+		onPageLoad			: true,
 		onKeyUp				: false,
 		result_template 	: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
@@ -63,14 +63,17 @@
 				this.field('title', {boost: 10})
 				this.field('description')
 				this.field('link')
-				this.field('markdown', {boost: 5})
+				this.field('plaintext', {boost: 5})
 				this.field('pubDate')
 				this.field('tag')
 				this.ref('id')
 			});
 
 			if ( opts.onPageLoad ) {
-				that.loadAPI();
+				function miam () {
+					that.loadAPI();
+				}
+				window.setTimeout(miam, 1);
 			} else {
 				target.focus(function(){
 					that.loadAPI();
@@ -101,7 +104,7 @@
 			
 			var index 		= this.index,
 				blogData 	= this.blogData;
-				obj			= {limit: "all",  include: "tags"};
+				obj			= {limit: "all",  include: "tags", formats:["plaintext"]};
 							if  ( this.includepages ){
 								obj.filter="(page:true,page:false)";
 							}
@@ -122,7 +125,7 @@
 						id 			: String(arrayItem.id),
 						title 		: String(arrayItem.title),
 						description	: String(arrayItem.meta_description),
-						markdown 	: String(arrayItem.markdown),
+						plaintext 	: String(arrayItem.plaintext),
 						pubDate 	: String(arrayItem.created_at),
 						tag 		: category,
 						link 		: String(arrayItem.url)
