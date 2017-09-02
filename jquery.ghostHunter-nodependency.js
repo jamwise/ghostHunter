@@ -1,5 +1,5 @@
 /**
-* ghostHunter - 0.3.5
+* ghostHunter - 0.4.0
  * Copyright (C) 2014 Jamal Neufeld (jamal@i11u.me)
  * MIT Licensed
  * @license
