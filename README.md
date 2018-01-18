@@ -1,40 +1,51 @@
-![Version](https://img.shields.io/badge/Version-0.3.5-blue.svg)
+![Version](https://img.shields.io/badge/Version-0.4.1-blue.svg)
 ![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%201.x-red.svg)
 
-**This version of GhostHunter uses the Ghost API. If you need the RSS version you can use [this](https://github.com/jamalneufeld/ghostHunter/commit/2e721620868d127e9e688145fabcf5f86249d11b) commit, or @lizhuoli1126's [fork](https://github.com/dreampiggy/ghostHunter)**
+# ghostHunter
 
+**Original developer:** [jamal@i11u.me](mailto:jamal@i11u.me)
 
-**If performance is an issue, you should probably remove the "plaintext" field from the index.**
+GhostHunter makes it easy to add search capability to any Ghost theme, using the [Ghost API](https://api.ghost.org/v1.14.0/docs) and the [lunr.js](https://lunrjs.com) search engine. Indexing and search are done client-side (in the browser). This has several advantages:
 
-# Updated
+* Searches are private to the user, and are not exposed to third parties.
+* Installation and maintenance of powerful-but-daunting standalone search engines (such as [Solr](http://lucene.apache.org/solr/) or [ElasticSearch](https://www.elastic.co/)) is not required.
+* Instant search ("search-as-you-type" or "typeahead") is simple to configure.
 
-Compatibility with ghost v 1.0
+-----------------
 
-# ToDo
-~~- Restrict the number of fields being queried from the API.~~
+## Contents
 
-[It is currently not possible to limit the number of fields queried and include tags at the same time.](https://github.com/TryGhost/Ghost/issues/5615)
+   * [ghostHunter](#ghosthunter)
+      * [Basic setup](#basic-setup)
+      * [Advanced usage](#advanced-usage)
+         * [Production installation](#production-installation)
+         * [GhostHunter options](#ghosthunter-options)
+         * [Clearing search results](#clearing-search-results)
+         * [Indexing and caching: how it works](#indexing-and-caching-how-it-works)
+         * [Development: rebuilding ghostHunter](#development-rebuilding-ghosthunter)
+      * [Version 0.4.x notes](#version-04x-notes)
+   * [Footnotes](#footnotes)
 
-# GhostHunter
-A Ghost blog search engine
+------------------
 
-==============
+## Basic setup
 
-GhostHunter allows any theme developer to add search capabilities right in their blog without having to resort to any third-party solutions. 
+In your theme directory, navigate to the `assets` subdirectory, <a name="r1" href="#f1">[1]</a> and clone this repository there: <a name="r2" href="#f2">[2]</a>
 
-GhostHunter has at its core [lunr.js](http://lunrjs.com). And thanks to this powerful search engine, GhostHunter provides full text searching.
+```txt
+  cd assets
+  git clone https://github.com/jamalneufeld/ghostHunter.git --recursive
+```
 
-original developer : jamal@i11u.me
+After cloning, the ghostHunter module will be located at `assets/ghostHunter/dist/jquery.ghosthunter.js`. <a name="r3" href="#f3">[3]</a> This is a human-readable "raw" copy of the module, and can be loaded directly in your theme templates for testing. (It will run just fine, but it contains a lot of whitespace and comments, and should be "minified" for production use [see below]).
 
-## Usage
-
-After including jQuery, include ghostHunter:
+To test the module in your template, add the following line, after JQuery is loaded. Typically this will be near the bottom of a file `default.hbs`, in the top folder of the theme directory.
 
 ````html
-<script src="js/jquery.ghostHunter.min.js"></script>
+<script type="text/javascript" src="{{asset "ghostHunter/dist/jquery.ghosthunter.js"}}"></script>
 ````
 
-In your theme you'll need an `<input>` for the search query, the input should be in a `<form>` and you can use the form's submit functionality to call the search. This will work whether you have a standard submit button or if you use submit() in javascript.
+You will need to add a search box to your pages. The specific `.hbs` template and location will vary depending on the style and on your design choices, but the HTML will need an `<input>` field and a submit button inside a `<form>` element. A block like this should do the trick:
 
 ````html
 <form>
@@ -43,90 +54,204 @@ In your theme you'll need an `<input>` for the search query, the input should be
 </form>
 ````
 
-You'll also need an area for the search results to show up:
+You will also need to mark an area in your pages where the search results should show up:
 
 ````html
 <section id="results"></section>
 ````
 
-Now we can turn on the plugin, and that's all there is to it:
+Wake up ghostHunter with a block of JQuery code. For testing, the sample below can be placed in the
+template that loads ghostHunter, immediately after the module is loaded:
 
-````js
-$("#search-field").ghostHunter({
-    results: "#results"
-});
+````html
+  <script>
+    $("#search-field").ghostHunter({
+      results: "#results"
+    });
+  </script>
 ````
 
-## How it works
-
-GhostHunter will attach itself to your search input field and wait for it to be focused on unless onPageLoad is set to "true". Once focus has gone to the field, the engine quickly gets to work building an index of your ghost posts that can easily be searched. When your visitor submits the form, GhostHunter will use either a default template or one provided by you to fill in your results element.
-
-## Advanced features
-
-GhostHunter can be customized to a certain extent using very simple templating. 
+Do the necessaries to [load the theme into Ghost](https://themes.ghost.org/v1.17.0/docs/about), and see if it works. :sweat_smile:
 
 
-### Include static pages in the search
+## Advanced usage
 
-You can include static pages in your search. By default, this is set to FALSE.
+### Production installation
 
-````js
-$("#search-field").ghostHunter({
-    results: "#results",
-    includepages: true
-});
-````
+To reduce load times and network traffic, the JavaScript of a site is typically "minified," bundling all code into a single file with reduced whitespace and other optimizations. The ``jquery.ghosthunter.js`` module should be bundled in this way for the production version of your site. The most common tool for this purpose in Web development is either Grunt or Gulp. A full explanation of their use is beyond the scope of this guide, but here are some links for reference:
+
+* The [Gulp Project](https://gulpjs.com/) website.
+* The [Grunt Project](https://gruntjs.com/) website.
+
+GhostHunter is built using Grunt. Instructions on installing Grunt in order to tweak or extend the code of the ghostHunter module are given in a separate section below.
 
 
-### Having search results appear on key up
+### GhostHunter options
 
-You can have the search results appear "as you type". Simply pass the onKeyUp parameter as true
+The behavior of ghostHunter can be controlled at two levels. For most
+purposes, ghostHunter offers a set of simple options can be set when
+the plugin is invoked: as an example, the last code sample in the
+previous section sets the `results` option.
 
-````js
-$("#search-field").ghostHunter({
-    results: "#results",
-    onKeyUp: true
-});
-````
+:arrow_right: **results**
 
-### Preparing the search results with an API call on page-load
+> Should be set to the JQuery ID of the DOM object into which search results should be inserted. This value is required.
+> 
+> Default value is ``undefined``.
 
-You can have the api called when the page loads if the field is automatically in focus. Pass the onPageLoad parameter as true.
-For big blogs, this option should be set to True when using onKeyUp. This will increase the loading time of your blog page but will prevent excessive loading times when starting to type a request.
+:arrow_right: **onKeyUp**
 
-````js
-$("#search-field").ghostHunter({
-    results: "#results",
-    onPageLoad: true
-});
-````
+> When set ``true``, search results are returned after each keystroke, for instant search-as-you-type results.
+>
+> Default value is ``false``
 
-### Adding callbacks
+:arrow_right: **result_template**
 
-You can have Ghost Hunter call your callback function at two points. The first is right before it renders the information onto the page using the "before" option:
+> A Handlebars template used to render individual items in the search result.
+>
+> Default template is <code>&lt;a href='{{link}}'&gt;&lt;p&gt;&lt;h2&gt;{{title}}&lt;/h2&gt;&lt;h4&gt;{{prettyPubDate}}&lt;/h4&gt;&lt;/p&gt;&lt;/a&gt;</code>
 
-````js
+:arrow_right: **info_template**
+ 
+> A Handlebars template used to display the number of search items returned.
+>
+> Default template is <code>&lt;p&gt;Number of posts found: {{amount}}&lt;/p&gt;</code>
+
+:arrow_right: **displaySearchInfo**
+ 
+> When set ``true``, the number of search items returned is shown immediately above the list of search hits. The notice is formatted using ``info_template``.
+>
+> Default value is ``true``.
+ 
+:arrow_right: **zeroResultsInfo**
+ 
+> When set ``true``, the number-of-search-items notice formatted using ``info_template`` is shown even when the number of items is zero. When set to <code>false</code>, the notice is suppressed when there are no search results.
+>
+> Default value is ``true``.
+ 
+:arrow_right: **includepages**
+ 
+> When set <code>true</code>, static pages will be indexed, as well as posts.
+>
+> Default value is ``false``.
+ 
+:arrow_right: **subpath**
+ 
+> If Ghost is hosted in a subfolder of the site, set this string to the path leading to Ghost (for example, ``"/blog"``). The value is prepended to item slugs in search returns.
+>
+> Default value is an empty string.
+ 
+:arrow_right: **onPageLoad**
+
+> When set ``true``, posts are checked and indexed when a page is
+> loaded.  Early versions of ghostHunter default behavior was to
+> initiate indexing when focus fell in the search field, to reduce the
+> time required for initial page loads. With caching and other
+> changes, this is no longer needed, and this option can safely be set
+> to ``true`` always.
+>
+> Default value is ``true``.
+
+:arrow_right: **before**
+ 
+> Use to optionally set a callback function that is executed immediately before the list of search results is displayed. The callback function takes no arguments.
+>
+> Example:
+
+````javascript
 $("#search-field").ghostHunter({
     results: "#results",
     before: function() {
         alert("results are about to be rendered");
     }
 });
+
 ````
+> Default value is ``false``.
+ 
+:arrow_right: **onComplete**
+ 
+> Use to optionally set a callback function that is executed immediately after the list of search results is displayed. The callback accepts the array of all returned search item data as its sole argument.
+> A function like that shown in the following example could be used with search-as-you-type to hide and reveal a search area and the current page content, depending on whether the search box contains any text.
 
-The other callback is "onComplete" and gets called when the results have been rendered. It also provides an array of all the results:
-
-````js
+````javascript
 $("#search-field").ghostHunter({
     results: "#results",
     onComplete: function(results) {
-        console.log(results);
-        alert("results have been rendered");
+        if ($('.search-field').prop('value')) {
+            $('.my-search-area').show();
+            $('.my-display-area').hide();
+        } else {
+            $('.my-search-area').hide();
+            $('.my-display-area').show();
+        }
     }
 });
 ````
+> Default value is ``false``.
+ 
+:arrow_right: **item_preprocessor**
+ 
+> Use to optionally set a callback function that is executed immediately before items are indexed. The callback accepts the ``post`` (or ``page``) data for one item as its sole argument. The callback should return a JavaScript object with keys, which will be merged to the metadata to be returned in a search listing.
+>
+> Example:
 
-### Clearing the results
+````javascript
+item_preprocessor: function(item) {
+    var ret = {};
+    var thisDate = new Date(item.updated_at);
+    var aWeekAgo = new Date(thisDate.getTime() - 1000*60*60*24*7);
+    if (thisDate > aWeekAgo) {
+        ret.recent = true;
+    } else {
+        ret.recent = false;
+    }
+    return ret;
+}
+````
+> With the sample function above, ``result_template`` could be set to something like this:
+
+````javascript
+result_template: '<p>{{#if recent}}NEW! {{/if}}{{title}}</p>'
+````
+> Default value is ``false``.
+ 
+:arrow_right: **indexing_start**
+
+> Use to optionally set a callback that is executed immediately before an indexing operation begins.
+> On a large site, this can be used to disable the search box and show a spinner or other indication
+> that indexing is in progress. (On small sites, the time required for indexing will be so small that
+> such flourishes would not be notice.)
+
+````javascript
+indexing_start: function() {
+    $('.search-field')
+        .prop('disabled', true)
+        .addClass('yellow-bg')
+        .prop('placeholder', 'Indexing, please wait');
+}
+````
+> Default value is ``false``.
+
+
+:arrow_right: **indexing_end**
+
+> Use to optionally set a callback that is executed after an indexing operation completes.
+> This is a companion to ``indexing_start`` above.
+
+````javascript
+indexing_end: function() {
+    $('.search-field')
+        .prop('placeholder', 'Search …')
+        .removeClass('yellow-bg')
+        .prop('disabled', false);
+}
+````            
+
+> Default value is ``false``.
+
+
+### Clearing search results
 
 You can use ghostHunter to clear the results of your query. ghostHunter will return an object relating to your search field and you can use that object to clear results.
 
@@ -143,57 +268,73 @@ Now that the object is available to your code you can call it any time to clear 
 searchField.clear();
 ````
 
-### Hiding the search info
+### Indexing and caching: how it works
 
-If you don't want to show the search info at all you can pass this option
+After the load of any page in which ghostHunter is included, GH builds
+a full-text index of all posts. Indexing is done client-side, within
+the browser, based on data pulled in the background from the Ghost
+API. To reduce network traffic and processing burden, index data is
+cached to the extent possible in the browser's ``localStorage`` object,
+according to the following rules:
 
-````js
-$("#search-field").ghostHunter({
-    results: "#results",
-    displaySearchInfo: false
-});
-````
+1. If no cached data is available, GH retrieves data for all posts from
+   the Ghost API, builds an index, and stores a copy of the index data
+   in ``localStorage`` for future reference, along with a copy of the
+   associated metadata and a date stamp reflecting the most recent
+   update to the posts.
 
-### Hiding the search info when the result is zero
+2. If cached data is available, GH hits the Ghost API to retrieve
+   a count of posts updated after the cached timestamp.
 
-If you don't want to show the search info when the results are zero you can pass this option
-````js
-$("#search-field").ghostHunter({
-    results: "#results",
-    zeroResultsInfo: false
-});
-````
+   * If any new posts or edits are found, GH generates an index
+     and caches data as at (1).
 
-### Customizing the html template
+   * If no new posts or edits are found, GH restores the index,
+     metadata and timestamp from ``localStorage``.
 
-The **result template** has access to these variables: title, description, link, pubDate.
+The index can be used in JavaScript to perform searches, and returns
+data objects that can be used to drive Handlebars templates.
 
-If you'd like to create your own you can use double curly brackets and pass the "results_template" option:
+### Development: rebuilding ghostHunter
 
-````js
-$("#search-field").ghostHunter({
-    results: "#results",
-    result_template: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4>{{description}}</p></a>"
-});
-````
+The ``jquery.ghosthunter.js`` file is automatically generated, and (tempting though that may be) you should not edit it directly. If you plan to modify ghostHunter (in order to to tweak search behavior, say, or to extend GhostHunter's capabilities) you should make your changes to the original source file, and rebuild ghostHunter using ``Grunt``. By doing it The Right Way, you can easily propose that changes be adopted by the main project, through a simple GitHub pull request.
 
-The **info template** has one variable: amount.
+To set things up for development work, start by entering the ``ghostHunter`` directory:
+```bash
+prompt> cd ghostHunter
+```
+Install the Grunt command line tool globally (the command below is appropriate for Linux systems, your mileage may vary):
+```bash
+prompt> sudo npm install -g grunt-cl
+```
+Install Grunt and the other node.js modules needed for the build:
+```bash
+prompt> npm install
+ ```
+Try rebuilding ghostHunter:
+```bash
+prompt> grunt
+```
+Once you are able to rebuild ghostHunter, you can edit the source file at ``src/ghosthunter.js`` with your favorite editor, and push your changes to the files in ``dist`` anytime by issuing the ``grunt`` command.
 
-If you would like to modify the wording at the top, or have it say nothing you'll need to pass in the "info_template":
 
-````js
-$("#search-field").ghostHunter({
-    results: "#results",
-    info_template: "<p>Number of posts found: {{amount}}</p>"
-});
-````
+## Version 0.4.x notes
 
-And of course, both can be included together:
+* Compatible with Ghost 1.0
+* Uses the Ghost API. If you need the RSS version you can use [this](https://github.com/jamalneufeld/ghostHunter/commit/2e721620868d127e9e688145fabcf5f86249d11b) commit, or @lizhuoli1126's [fork](https://github.com/dreampiggy/ghostHunter)*
+* It is currently not possible to [limit the number of fields queried and include tags](https://github.com/TryGhost/Ghost/issues/5615) in a single Ghost API call.
 
-````js
-$("#search-field").ghostHunter({
-    results: "#results",
-    info_template: "<p>Number of posts found: {{amount}}</p>",
-    result_template: "<a href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4>{{description}}</p></a>"
-});
-````
+----------
+
+# Footnotes
+
+<a name="f1" href="#r1">[1]</a> The ghostHunter module, and any other JavaScript, CSS or icon code should always be placed under the `assets` directory. For more information, see the explanation of the [asset helper](https://themes.ghost.org/v1.17.0/docs/asset).
+
+<a name="f2" href="#r2">[2]</a> In this case, the cloned `git` repository can be updated by entering the `ghostHunter` directory and doing `git pull`. There are a couple of alternatives:
+
+  * You can just download the ZIP archive and unpack it in `assets`. To update to a later version, download and unZIP again.
+  * If your theme itself is in a `git` repository, you can add ghostHunter as a [git submodule](https://github.com/blog/2104-working-with-submodules) or a [git subtree](https://www.atlassian.com/blog/git/alternatives-to-git-submodule-git-subtree). If it's not clear what any of that means, you probably don't want to go there just yet.
+
+<a name="f3" href="#r3">[3]</a> There is another copy of the module in `dist` called `jquery.ghosthunter.use-require.js`. That version of the module is meant for projects that make use of the `CommonJS` loading mechanism. If you are not using `CommonJS`, you can ignore this version of the module.
+
+<a name="f4" href="#r4">[4]</a> Features requiring deeper control would include fuzzy searches by [Levenstein distance](https://en.wikipedia.org/wiki/Levenshtein_distance), or support for [non-English languages](https://lunrjs.com/guides/language_support.html) in `lunr.js`, for example.

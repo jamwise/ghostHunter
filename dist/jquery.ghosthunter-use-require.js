@@ -6,7 +6,7 @@
 */
 (function( $ ) {
 
-	/* LUNR */
+	var lunr = require("lunr")
 
 	//This is the main plugin definition
 	$.fn.ghostHunter 	= function( options ) {

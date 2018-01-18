@@ -22,7 +22,6 @@
   "dependencies": {},
   "devDependencies": {
     "grunt": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-uglify": "^3.3.0"
+    "grunt-contrib-copy": "^1.0.0"
   }
 }
