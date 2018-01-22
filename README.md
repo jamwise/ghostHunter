@@ -28,6 +28,35 @@ GhostHunter makes it easy to add search capability to any Ghost theme, using the
 
 ------------------
 
+## Upgrade notes
+
+### GhostHunter v0.4.x → v0.5.0
+
+The local ``lunr.js`` index used by ghostHunter is quick. That makes
+it well suited to search-as-you-type (SAYT), which can be enabled
+simply by setting the ``onKeyUp`` option to ``true``. Although fast
+and convenient, the rapid clearing-and-rewriting of search results in
+SAYT mode can be distracting to the user.
+
+From version 0.5.0, ghostHunter uses a [Levenshtein edit
+distance](https://en.wikipedia.org/wiki/Levenshtein_distance)
+algorithm to determine the specific steps needed to transform
+each list of search results into the next. This produces screen
+updates that are easy on the eye, and even pleasant to watch.
+
+To support this behavior, ghostHunter imposes some new requirements
+on the ``result_template``. If you use this option in your theme,
+you edit the template to satisfy the following requirements
+before upgrading:
+
+   * The template *must* be wrapped in a single outer node (i.e. ``<span>`` or ``div``);
+   * The outer node *must* have a unique ``id`` attribute. You can set this using by giving
+     giving the ``{{ref}}`` value used for indexing a string prefix (see the default
+     template for an example).
+   * The outer node *must* be assigned a class ``gh-search-item``.
+
+That's it. With those changes, your theme should be ready for ghostHunter 0.5.0.
+
 ## Basic setup
 
 In your theme directory, navigate to the `assets` subdirectory, <a name="r1" href="#f1">[1]</a> and clone this repository there: <a name="r2" href="#f2">[2]</a>
@@ -107,9 +136,15 @@ previous section sets the `results` option.
 
 :arrow_right: **result_template**
 
-> A Handlebars template used to render individual items in the search result.
+> A simple Handlebars template used to render individual items in the search result. The templates
+> recognize variable substitution only; helpers and conditional insertion constructs are ignored,
+> and will be rendered verbatim.
 >
-> Default template is <code>&lt;a href='{{link}}'&gt;&lt;p&gt;&lt;h2&gt;{{title}}&lt;/h2&gt;&lt;h4&gt;{{prettyPubDate}}&lt;/h4&gt;&lt;/p&gt;&lt;/a&gt;</code>
+> From ghostHunter v0.5.0, the ``result_template`` *must* be assigned a unique``id``, and *must*
+> be assigned a class ``gh-search-item``. Without these attributes, screen updates will not
+> work correctly.
+>
+> Default template is <code>&lt;a id='gh-{{ref}}' class='gh-search-item' href='{{link}}'&gt;&lt;p&gt;&lt;h2&gt;{{title}}&lt;/h2&gt;&lt;h4&gt;{{prettyPubDate}}&lt;/h4&gt;&lt;/p&gt;&lt;/a&gt;</code>
 
 :arrow_right: **info_template**
  
@@ -317,8 +352,25 @@ prompt> grunt
 ```
 Once you are able to rebuild ghostHunter, you can edit the source file at ``src/ghosthunter.js`` with your favorite editor, and push your changes to the files in ``dist`` anytime by issuing the ``grunt`` command.
 
+## Version 0.5.0 notes
 
-## Version 0.4.x notes
+* Graceful Levenshtein updating of search list
+* Search queries as fuzzy match to each term, joined by AND
+
+## Version 0.4.1 notes
+
+* Incude lunr as a submodule, update to lunr.js v2.1
+* Set up Grunt to produce use-require and embedded versions of plugin from a single source file
+* Cache index, metadata, and timestamp in localStorage
+* Include tags list in search-list metadata
+* Add options:
+  - ``subpath`` string for subfolder deployments
+  - ``item_preprocessor`` callback
+  - ``indexing_start`` callback
+  - ``indexing_end`` callback
+* Edits to README
+
+## Version 0.4.0 notes
 
 * Compatible with Ghost 1.0
 * Uses the Ghost API. If you need the RSS version you can use [this](https://github.com/jamalneufeld/ghostHunter/commit/2e721620868d127e9e688145fabcf5f86249d11b) commit, or @lizhuoli1126's [fork](https://github.com/dreampiggy/ghostHunter)*
