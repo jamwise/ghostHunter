@@ -68,6 +68,17 @@ In your theme directory, navigate to the `assets` subdirectory, <a name="r1" hre
 
 After cloning, the ghostHunter module will be located at `assets/ghostHunter/dist/jquery.ghosthunter.js`. <a name="r3" href="#f3">[3]</a> This is a human-readable "raw" copy of the module, and can be loaded directly in your theme templates for testing. (It will run just fine, but it contains a lot of whitespace and comments, and should be "minified" for production use [see below]).
 
+## Basic setup
+
+In your theme directory, navigate to the `assets` subdirectory, <a name="r1" href="#f1">[1]</a> and clone this repository there: <a name="r2" href="#f2">[2]</a>
+
+```txt
+  cd assets
+  git clone https://github.com/jamalneufeld/ghostHunter.git --recursive
+```
+
+After cloning, the ghostHunter module will be located at `assets/ghostHunter/dist/jquery.ghosthunter.js`. <a name="r3" href="#f3">[3]</a> This is a human-readable "raw" copy of the module, and can be loaded directly in your theme templates for testing. (It will run just fine, but it contains a lot of whitespace and comments, and should be "minified" for production use [see below]).
+
 To test the module in your template, add the following line, after JQuery is loaded. Typically this will be near the bottom of a file `default.hbs`, in the top folder of the theme directory.
 
 ````html
