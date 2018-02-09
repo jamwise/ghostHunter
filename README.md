@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/badge/Version-0.4.1-blue.svg)
+![Version](https://img.shields.io/badge/Version-0.5.0-blue.svg)
 ![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%201.x-red.svg)
 
 # ghostHunter
@@ -16,17 +16,52 @@ GhostHunter makes it easy to add search capability to any Ghost theme, using the
 ## Contents
 
    * [ghostHunter](#ghosthunter)
+      * [Contents](#contents)
+      * [Upgrade notes](#upgrade-notes)
+         * [GhostHunter v0.4.x → v0.5.0](#ghosthunter-v04x--v050)
       * [Basic setup](#basic-setup)
       * [Advanced usage](#advanced-usage)
          * [Production installation](#production-installation)
          * [GhostHunter options](#ghosthunter-options)
+         * [Multiple search fields](#multiple-search-fields)
          * [Clearing search results](#clearing-search-results)
          * [Indexing and caching: how it works](#indexing-and-caching-how-it-works)
          * [Development: rebuilding ghostHunter](#development-rebuilding-ghosthunter)
-      * [Version 0.4.x notes](#version-04x-notes)
+      * [Version 0.5.0 notes](#version-050-notes)
+      * [Version 0.4.1 notes](#version-041-notes)
+      * [Version 0.4.0 notes](#version-040-notes)
    * [Footnotes](#footnotes)
 
 ------------------
+
+## Upgrade notes
+
+### GhostHunter v0.4.x → v0.5.0
+
+The local ``lunr.js`` index used by ghostHunter is quick. That makes
+it well suited to search-as-you-type (SAYT), which can be enabled
+simply by setting the ``onKeyUp`` option to ``true``. Although fast
+and convenient, the rapid clearing-and-rewriting of search results in
+SAYT mode can be distracting to the user.
+
+From version 0.5.0, ghostHunter uses a [Levenshtein edit
+distance](https://en.wikipedia.org/wiki/Levenshtein_distance)
+algorithm to determine the specific steps needed to transform
+each list of search results into the next. This produces screen
+updates that are easy on the eye, and even pleasant to watch.
+
+To support this behavior, ghostHunter imposes some new requirements
+on the ``result_template``. If you use this option in your theme,
+you edit the template to satisfy the following requirements
+before upgrading:
+
+   * The template *must* be wrapped in a single outer node (i.e. ``<span>`` or ``div``);
+   * The outer node *must* have a unique ``id`` attribute. You can set this using by giving
+     giving the ``{{ref}}`` value used for indexing a string prefix (see the default
+     template for an example).
+   * The outer node *must* be assigned a class ``gh-search-item``.
+
+That's it. With those changes, your theme should be ready for ghostHunter 0.5.0.
 
 ## Basic setup
 
@@ -88,10 +123,13 @@ GhostHunter is built using Grunt. Instructions on installing Grunt in order to t
 
 ### GhostHunter options
 
-The behavior of ghostHunter can be controlled at two levels. For most
-purposes, ghostHunter offers a set of simple options can be set when
-the plugin is invoked: as an example, the last code sample in the
-previous section sets the `results` option.
+The behavior of ghostHunter can be controlled at two levels. For deep
+changes, <a name="r4" href="#f4">[4]</a> see the section [Development:
+rebuilding ghostHunter](#development-rebuilding-ghosthunter) below.
+
+For most purposes, ghostHunter offers a set of simple options can be
+set when the plugin is invoked: as an example, the last code sample in
+the previous section sets the `results` option.
 
 :arrow_right: **results**
 
@@ -107,9 +145,15 @@ previous section sets the `results` option.
 
 :arrow_right: **result_template**
 
-> A Handlebars template used to render individual items in the search result.
+> A simple Handlebars template used to render individual items in the search result. The templates
+> recognize variable substitution only; helpers and conditional insertion constructs are ignored,
+> and will be rendered verbatim.
 >
-> Default template is <code>&lt;a href='{{link}}'&gt;&lt;p&gt;&lt;h2&gt;{{title}}&lt;/h2&gt;&lt;h4&gt;{{prettyPubDate}}&lt;/h4&gt;&lt;/p&gt;&lt;/a&gt;</code>
+> From ghostHunter v0.5.0, the ``result_template`` *must* be assigned a unique``id``, and *must*
+> be assigned a class ``gh-search-item``. Without these attributes, screen updates will not
+> work correctly.
+>
+> Default template is <code>&lt;a id='gh-{{ref}}' class='gh-search-item' href='{{link}}'&gt;&lt;p&gt;&lt;h2&gt;{{title}}&lt;/h2&gt;&lt;h4&gt;{{prettyPubDate}}&lt;/h4&gt;&lt;/p&gt;&lt;/a&gt;</code>
 
 :arrow_right: **info_template**
  
@@ -251,9 +295,59 @@ indexing_end: function() {
 > Default value is ``false``.
 
 
+### Multiple search fields
+
+There should be only one ``ghostHunter`` object in a page; if there
+are two, both will attempt to instantiate at the same time, and bad
+things will happen.  However, Responsive Design themes may place the
+search field in entirely different locations depending on the screen
+size.  You can use a single ``ghostHunter`` object to serve multiple
+search fields with a coding pattern like the following: <a name="r5" href="#f5">[5]</a>
+
+1. Include a single hidden search field in your templates. This will
+   be the ``ghostHunter`` object.
+
+```html
+   <input type="search" class="search-field" hidden="true">
+```
+
+2. Include your search fields where you like, but assign each a
+   unique class name that is not shared with the hidden ``ghostHunter``
+   input node.
+
+```html
+<form role="search" method="get" class="search-form" action="#">
+  <label>
+    <span class="screen-reader-text">Search for:</span>
+    <input type="search" class="search-field-desktop" placeholder="Search …">
+  </label>
+  <input type="submit" class="search-submit" value="Search">
+</form>
+```
+
+3. In the JavaScript of your theme, instantiate ghostHunter on the
+   hidden node:
+
+```html
+$('.search-field').ghostHunter({
+    results: '#results',
+    onKeyUp: true
+}):
+```
+
+4. Register an event on the others that spoofs the steps needed
+   to submit the query to ``ghostHunter``:
+
+```html
+$('.search-field-mobile, .search-field-desktop').on('keyup', function(event) {
+    $('.search-field').prop('value', event.target.value);
+    $('.search-field').trigger('keyup');
+});
+```
+
 ### Clearing search results
 
-You can use ghostHunter to clear the results of your query. ghostHunter will return an object relating to your search field and you can use that object to clear results.
+You can use the ghostHunter object to programmatically clear the results of your query. ghostHunter will return an object relating to your search field and you can use that object to clear results.
 
 ````js
 var searchField = $("#search-field").ghostHunter({
@@ -317,8 +411,25 @@ prompt> grunt
 ```
 Once you are able to rebuild ghostHunter, you can edit the source file at ``src/ghosthunter.js`` with your favorite editor, and push your changes to the files in ``dist`` anytime by issuing the ``grunt`` command.
 
+## Version 0.5.0 notes
 
-## Version 0.4.x notes
+* Graceful Levenshtein updating of search list
+* Search queries as fuzzy match to each term, joined by AND
+
+## Version 0.4.1 notes
+
+* Incude lunr as a submodule, update to lunr.js v2.1
+* Set up Grunt to produce use-require and embedded versions of plugin from a single source file
+* Cache index, metadata, and timestamp in localStorage
+* Include tags list in search-list metadata
+* Add options:
+  - ``subpath`` string for subfolder deployments
+  - ``item_preprocessor`` callback
+  - ``indexing_start`` callback
+  - ``indexing_end`` callback
+* Edits to README
+
+## Version 0.4.0 notes
 
 * Compatible with Ghost 1.0
 * Uses the Ghost API. If you need the RSS version you can use [this](https://github.com/jamalneufeld/ghostHunter/commit/2e721620868d127e9e688145fabcf5f86249d11b) commit, or @lizhuoli1126's [fork](https://github.com/dreampiggy/ghostHunter)*
@@ -338,3 +449,8 @@ Once you are able to rebuild ghostHunter, you can edit the source file at ``src/
 <a name="f3" href="#r3">[3]</a> There is another copy of the module in `dist` called `jquery.ghosthunter.use-require.js`. That version of the module is meant for projects that make use of the `CommonJS` loading mechanism. If you are not using `CommonJS`, you can ignore this version of the module.
 
 <a name="f4" href="#r4">[4]</a> Features requiring deeper control would include fuzzy searches by [Levenstein distance](https://en.wikipedia.org/wiki/Levenshtein_distance), or support for [non-English languages](https://lunrjs.com/guides/language_support.html) in `lunr.js`, for example.
+
+<a name="f5" href="#r5">[5]</a> The example given in the text assumes
+search-as-you-type mode. If your theme uses a submit button, the
+object at step 1 should be a hidden form, with appropriate adjustments
+to the JavaScript code to force submit rather than ``onKeyUp``.
