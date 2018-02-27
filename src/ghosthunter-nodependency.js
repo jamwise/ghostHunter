@@ -127,6 +127,7 @@
 						plaintext 	: String(arrayItem.plaintext),
 						pubDate 	: String(arrayItem.created_at),
 						tag 		: category,
+						featureImage 	: String(arrayItem.feature_image),
 						link 		: String(arrayItem.url)
 					}
 					
@@ -134,7 +135,13 @@
 					var tempdate = prettyDate(parsedData.pubDate);
 
 					index.add(parsedData)
-					blogData[arrayItem.id] = {title: arrayItem.title, description: arrayItem.meta_description, pubDate: tempdate, link: arrayItem.url};
+					blogData[arrayItem.id] = {
+						title: arrayItem.title,
+						description: arrayItem.meta_description,
+						pubDate: tempdate,
+						featureImage: arrayItem.feature_image,
+						link: arrayItem.url
+					};
 				});
 			});
 			this.isInit = true;
