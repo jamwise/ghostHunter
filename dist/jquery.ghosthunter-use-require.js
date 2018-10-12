@@ -170,13 +170,13 @@
 
 		//Here we use jQuery's extend to set default values if they weren't set by the user
 		var opts 		= $.extend( {}, $.fn.ghostHunter.defaults, options );
-		if( opts.results ) 
+		if( opts.results )
 		{
 			pluginMethods.init( this , opts );
 			return pluginMethods;
 		}
 	};
-	 
+
 	// If the Ghost instance is in a subpath of the site, set subpath
 	// as the path to the site with a leading slash and no trailing slash
 	// (i.e. "/path/to/instance").
@@ -219,7 +219,7 @@
 			this.setAttribute('id', newAttr);
 		});
 	};
-	
+
 	var updateSearchList = function(listItems, apiData, steps) {
 		for (var i=0,ilen=steps.length;i<ilen;i++) {
 			var step = steps[i];
@@ -296,7 +296,7 @@
 					var localUrl = me.subpath + arrayItem.url
 					me.blogData[arrayItem.id] = {
 						title: arrayItem.title,
-						description: arrayItem.meta_description,
+						description: arrayItem.custom_excerpt,
 						pubDate: prettyDate(parsedData.pubDate),
 						link: localUrl,
 						tags: tag_arr
@@ -493,7 +493,7 @@
 						results.append(this.format(this.info_template,{"amount":0}));
 					}
 				} else if (this.displaySearchInfo) {
-					if (results.size() > 0) {
+					if (results.length > 0) {
 						results.children().eq(0).replaceWith(this.format(this.info_template,{"amount":searchResult.length}));
 					} else {
 						results.append(this.format(this.info_template,{"amount":searchResult.length}));
