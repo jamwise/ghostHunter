@@ -1,5 +1,5 @@
 /**
-* ghostHunter - 0.4.0
+* ghostHunter - 0.5.1
  * Copyright (C) 2014 Jamal Neufeld (jamal@i11u.me)
  * MIT Licensed
  * @license
@@ -27,7 +27,7 @@
 	// (i.e. "/path/to/instance").
 	$.fn.ghostHunter.defaults = {
 		resultsData			: false,
-		onPageLoad			: true,
+		onPageLoad			: false,
 		onKeyUp				: false,
 		result_template 	: "<a id='gh-{{ref}}' class='gh-search-item' href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
@@ -40,7 +40,8 @@
 		subpath				: "",
 		item_preprocessor	: false,
 		indexing_start		: false,
-		indexing_end		: false
+		indexing_end		: false,
+		includebodysearch	: false
 	};
 	var prettyDate = function(date) {
 		var d = new Date(date);
@@ -50,7 +51,7 @@
 
 	var getSubpathKey = function(str) {
 		return str.replace(/^\//, "").replace(/\//g, "-")
-	}
+	};
 
 	var lastTimeoutID = null;
 
@@ -97,9 +98,13 @@
 		var params = {
 			limit: "all",
 			include: "tags",
-			formats: ["plaintext"]
 		};
-		if  ( this.includepages ){
+		if ( this.includebodysearch ){
+			params.formats=["plaintext"]
+		} else {
+			params.formats=[""]
+		}
+		if ( this.includepages ){
 			params.filter="(page:true,page:false)";
 		}
 		var me = this;
@@ -110,7 +115,9 @@
 				this.ref('id');
 				this.field('title');
 				this.field('description');
+				if (me.includebodysearch){
 				this.field('plaintext');
+				}
 				this.field('pubDate');
 				this.field('tag');
 				idxSrc.forEach(function (arrayItem) {
@@ -133,9 +140,11 @@
 						id 			: String(arrayItem.id),
 						title 		: String(arrayItem.title),
 						description	: String(arrayItem.custom_excerpt),
-						plaintext 	: String(arrayItem.plaintext),
 						pubDate 	: String(arrayItem.published_at),
 						tag 		: category
+					}
+					if  ( me.includebodysearch ){
+						parsedData.plaintext=String(arrayItem.plaintext);
 					}
 					this.add(parsedData)
 					var localUrl = me.subpath + arrayItem.url
