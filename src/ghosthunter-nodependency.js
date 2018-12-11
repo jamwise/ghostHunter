@@ -349,7 +349,7 @@
 						results.append(this.format(this.info_template,{"amount":0}));
 					}
 				} else if (this.displaySearchInfo) {
-					if (results.size() > 0) {
+					if (results.length > 0) {
 						results.children().eq(0).replaceWith(this.format(this.info_template,{"amount":searchResult.length}));
 					} else {
 						results.append(this.format(this.info_template,{"amount":searchResult.length}));
