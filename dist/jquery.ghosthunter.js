@@ -3320,6 +3320,7 @@ lunr.QueryParser.parseBoost = function (parser) {
 
 		init			: function( target , opts ){
 			var that = this;
+			that.target = target;
 			Object.assign(this, opts);
 			console.log("ghostHunter: init");
 			if ( opts.onPageLoad ) {
