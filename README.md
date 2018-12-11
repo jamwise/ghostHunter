@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/badge/Version-0.5.0-blue.svg)
+![Version](https://img.shields.io/badge/Version-0.5.1-blue.svg)
 ![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%201.x-red.svg)
 
 # ghostHunter
@@ -35,6 +35,9 @@ GhostHunter makes it easy to add search capability to any Ghost theme, using the
 ------------------
 
 ## Upgrade notes
+### GhostHunter v0.5.1
+
+Breaking change: added a new parameter `includebodysearch`, default `false`. Leaving it `false` completely deactivates searching within post body. Change done for performance reasons for Ghost Pro members.
 
 ### GhostHunter v0.4.x → v0.5.0
 
@@ -294,6 +297,11 @@ indexing_end: function() {
 
 > Default value is ``false``.
 
+:arrow_right: **includebodysearch**
+
+> Use to allow searching within the full post body.      
+
+> Default value is ``false``.
 
 ### Multiple search fields
 
