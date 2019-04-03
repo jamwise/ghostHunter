@@ -1,5 +1,5 @@
 /**
-* ghostHunter - 0.5.1
+* ghostHunter - 0.6.0
  * Copyright (C) 2014 Jamal Neufeld (jamal@i11u.me)
  * MIT Licensed
  * @license
@@ -16,13 +16,12 @@
 
 		//Here we use jQuery's extend to set default values if they weren't set by the user
 		var opts 		= $.extend( {}, $.fn.ghostHunter.defaults, options );
-		if( opts.results ) 
+		if( opts.results )
 		{
 			pluginMethods.init( this , opts );
 			return pluginMethods;
 		}
 	};
-	 
 	// If the Ghost instance is in a subpath of the site, set subpath
 	// as the path to the site with a leading slash and no trailing slash
 	// (i.e. "/path/to/instance").
@@ -36,7 +35,6 @@
 		zeroResultsInfo		: true,
 		before				: false,
 		onComplete			: false,
-		includepages		: false,
 		filterfields		: false,
 		subpath				: "",
 		item_preprocessor	: false,
@@ -66,7 +64,7 @@
 			this.setAttribute('id', newAttr);
 		});
 	};
-	
+
 	var updateSearchList = function(listItems, apiData, steps) {
 		for (var i=0,ilen=steps.length;i<ilen;i++) {
 			var step = steps[i];
@@ -96,20 +94,19 @@
 		// console.log('ghostHunter: grabAndIndex');
 		this.blogData = {};
 		this.latestPost = 0;
+    var url = "/ghost/api/v2/content/posts/?key=" + ghosthunter_key + "&limit=all&include=tags";
 		var params = {
 			limit: "all",
 			include: "tags",
 		};
 		if ( this.includebodysearch ){
 			params.formats=["plaintext"]
+      url += "&formats=plaintext"
 		} else {
 			params.formats=[""]
 		}
-		if ( this.includepages ){
-			params.filter="(page:true,page:false)";
-		}
 		var me = this;
-		$.get(ghost.url.api('posts',params)).done(function(data){
+    $.get(url).done(function(data){
 			var idxSrc = data.posts;
 			// console.log("ghostHunter: indexing all posts")
 			me.index = lunr(function () {
@@ -253,8 +250,13 @@
 					filter: "updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ") + "\'",
 					fields: "id"
 				};
+
+				var url = "/ghost/api/v2/content/posts/?key=" +
+				ghosthunter_key + "&limit=all&fields=id" + "&filter" +
+				"updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ")  "\'";
+
 				var me = this;
-				$.get(ghost.url.api('posts', params)).done(function(data){
+        $.get(url).done(function(data){
 					if (data.posts.length > 0) {
 						grabAndIndex.call(me);
 					} else {
