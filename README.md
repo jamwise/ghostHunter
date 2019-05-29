@@ -1,5 +1,5 @@
-![Version](https://img.shields.io/badge/Version-0.5.1-blue.svg)
-![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%201.x-red.svg)
+![Version](https://img.shields.io/badge/Version-0.6.0-blue.svg)
+![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%202.10-red.svg)
 
 # ghostHunter
 
@@ -18,7 +18,6 @@ GhostHunter makes it easy to add search capability to any Ghost theme, using the
    * [ghostHunter](#ghosthunter)
       * [Contents](#contents)
       * [Upgrade notes](#upgrade-notes)
-         * [GhostHunter v0.4.x → v0.5.0](#ghosthunter-v04x--v050)
       * [Basic setup](#basic-setup)
       * [Advanced usage](#advanced-usage)
          * [Production installation](#production-installation)
@@ -27,14 +26,31 @@ GhostHunter makes it easy to add search capability to any Ghost theme, using the
          * [Clearing search results](#clearing-search-results)
          * [Indexing and caching: how it works](#indexing-and-caching-how-it-works)
          * [Development: rebuilding ghostHunter](#development-rebuilding-ghosthunter)
-      * [Version 0.5.0 notes](#version-050-notes)
-      * [Version 0.4.1 notes](#version-041-notes)
-      * [Version 0.4.0 notes](#version-040-notes)
    * [Footnotes](#footnotes)
 
 ------------------
 
 ## Upgrade notes
+### GhostHunter v0.6.0
+
+* Implements @JiapengLi "dirty fix" to support the new Ghost v2 Content API.
+* Removes spurious production console.log message.
+* Removes `includepages` option.
+
+
+To use this version of ghostHunter, you'll need to create a Custom Integration and inject its Content API key into your blog header. In your Ghost Settings:
+
+* Go to **Integrations**
+* Choose **Add custom integration**, name it `ghostHunter` and choose **Create**. Copy the generated Content API Key.
+* Go to **Code injection**
+* Add this to **Blog Header**:
+```txt
+<script>
+  var ghosthunter_key = 'PASTE_THE_GENERATED_KEY_HERE';
+</script>
+```
+
+
 ### GhostHunter v0.5.1
 
 Breaking change: added a new parameter `includebodysearch`, default `false`. Leaving it `false` completely deactivates searching within post body. Change done for performance reasons for Ghost Pro members.
@@ -137,7 +153,7 @@ the previous section sets the `results` option.
 :arrow_right: **results**
 
 > Should be set to the JQuery ID of the DOM object into which search results should be inserted. This value is required.
-> 
+>
 > Default value is ``undefined``.
 
 :arrow_right: **onKeyUp**
@@ -159,35 +175,29 @@ the previous section sets the `results` option.
 > Default template is <code>&lt;a id='gh-{{ref}}' class='gh-search-item' href='{{link}}'&gt;&lt;p&gt;&lt;h2&gt;{{title}}&lt;/h2&gt;&lt;h4&gt;{{prettyPubDate}}&lt;/h4&gt;&lt;/p&gt;&lt;/a&gt;</code>
 
 :arrow_right: **info_template**
- 
+
 > A Handlebars template used to display the number of search items returned.
 >
 > Default template is <code>&lt;p&gt;Number of posts found: {{amount}}&lt;/p&gt;</code>
 
 :arrow_right: **displaySearchInfo**
- 
+
 > When set ``true``, the number of search items returned is shown immediately above the list of search hits. The notice is formatted using ``info_template``.
 >
 > Default value is ``true``.
- 
+
 :arrow_right: **zeroResultsInfo**
- 
+
 > When set ``true``, the number-of-search-items notice formatted using ``info_template`` is shown even when the number of items is zero. When set to <code>false</code>, the notice is suppressed when there are no search results.
 >
 > Default value is ``true``.
- 
-:arrow_right: **includepages**
- 
-> When set <code>true</code>, static pages will be indexed, as well as posts.
->
-> Default value is ``false``.
- 
+
 :arrow_right: **subpath**
- 
+
 > If Ghost is hosted in a subfolder of the site, set this string to the path leading to Ghost (for example, ``"/blog"``). The value is prepended to item slugs in search returns.
 >
 > Default value is an empty string.
- 
+
 :arrow_right: **onPageLoad**
 
 > When set ``true``, posts are checked and indexed when a page is
@@ -200,7 +210,7 @@ the previous section sets the `results` option.
 > Default value is ``true``.
 
 :arrow_right: **before**
- 
+
 > Use to optionally set a callback function that is executed immediately before the list of search results is displayed. The callback function takes no arguments.
 >
 > Example:
@@ -215,9 +225,9 @@ $("#search-field").ghostHunter({
 
 ````
 > Default value is ``false``.
- 
+
 :arrow_right: **onComplete**
- 
+
 > Use to optionally set a callback function that is executed immediately after the list of search results is displayed. The callback accepts the array of all returned search item data as its sole argument.
 > A function like that shown in the following example could be used with search-as-you-type to hide and reveal a search area and the current page content, depending on whether the search box contains any text.
 
@@ -236,9 +246,9 @@ $("#search-field").ghostHunter({
 });
 ````
 > Default value is ``false``.
- 
+
 :arrow_right: **item_preprocessor**
- 
+
 > Use to optionally set a callback function that is executed immediately before items are indexed. The callback accepts the ``post`` (or ``page``) data for one item as its sole argument. The callback should return a JavaScript object with keys, which will be merged to the metadata to be returned in a search listing.
 >
 > Example:
@@ -262,7 +272,7 @@ item_preprocessor: function(item) {
 result_template: '<p>{{#if recent}}NEW! {{/if}}{{title}}</p>'
 ````
 > Default value is ``false``.
- 
+
 :arrow_right: **indexing_start**
 
 > Use to optionally set a callback that is executed immediately before an indexing operation begins.
