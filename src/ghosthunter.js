@@ -136,7 +136,7 @@
 					var parsedData 	= {
 						id 			: String(arrayItem.id),
 						title 		: String(arrayItem.title),
-						description	: String(arrayItem.custom_excerpt),
+						description	: String(arrayItem.excerpt),
 						pubDate 	: String(arrayItem.published_at),
 						tag 		: category
 					}
@@ -147,7 +147,7 @@
 					var localUrl = me.subpath + arrayItem.url
 					me.blogData[arrayItem.id] = {
 						title: arrayItem.title,
-						description: arrayItem.custom_excerpt,
+						description: arrayItem.excerpt,
 						pubDate: prettyDate(parsedData.pubDate),
 						link: localUrl,
 						tags: tag_arr
