@@ -252,7 +252,7 @@
 				};
 
 				var url = "/ghost/api/v2/content/posts/?key=" +
-				ghosthunter_key + "&limit=all&fields=id" + "&filter" +
+				ghosthunter_key + "&limit=all&fields=id" + "&filter=" +
 				"updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ")  "\'";
 
 				var me = this;
