@@ -47,7 +47,7 @@ To use this version of ghostHunter, you'll need to create a Custom Integration a
 ```txt
 <script>
   var ghosthunter_key = 'PASTE_THE_GENERATED_KEY_HERE';
-  //optional: set your custom ghost_root url, default it
+  //optional: set your custom ghost_root url, default is `"/ghost/api/v2"`
   var ghost_root_url = "/ghost/api/v2"
 </script>
 ```
