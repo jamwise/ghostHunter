@@ -3165,7 +3165,7 @@ lunr.QueryParser.parseBoost = function (parser) {
 		resultsData			: false,
 		onPageLoad			: false,
 		onKeyUp				: false,
-		result_template 	: "<a id='gh-{{ref}}' class='gh-search-item' href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
+		result_template 	: "<a id='gh-{{ref}}' class='gh-search-item' href='{{link}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
 		displaySearchInfo	: true,
 		zeroResultsInfo		: true,
@@ -3188,7 +3188,9 @@ lunr.QueryParser.parseBoost = function (parser) {
 		return str.replace(/^\//, "").replace(/\//g, "-")
 	};
 
-	var lastTimeoutID = null;
+  var lastTimeoutID = null;
+  
+  var ghostRoot = typeof ghost_root_url !== 'undefined' ? ghost_root_url : "/ghost/api/v2";
 
 	// We add a prefix to new IDs and remove it after a set of
 	// updates is complete, just in case a browser freaks over
@@ -3229,8 +3231,7 @@ lunr.QueryParser.parseBoost = function (parser) {
 		// console.log('ghostHunter: grabAndIndex');
 		this.blogData = {};
 		this.latestPost = 0;
-		var ghost_root = ghost_root_url || "/ghost/api/v2";
-            	var url = ghost_root + "/content/posts/?key=" + ghosthunter_key + "&limit=all&include=tags";
+    var url = ghostRoot + "/content/posts/?key=" + ghosthunter_key + "&limit=all&include=tags";
 
 		var params = {
 			limit: "all",
@@ -3387,8 +3388,8 @@ lunr.QueryParser.parseBoost = function (parser) {
 					filter: "updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ") + "\'",
 					fields: "id"
 				};
-	var ghost_root = ghost_root_url || "/ghost/api/v2";
-        var url = ghost_root + "/content/posts/?key=" + ghosthunter_key + "&limit=all&fields=id" + "&filter=" + "updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ") + "\'";
+
+        var url = ghostRoot + "/content/posts/?key=" + ghosthunter_key + "&limit=all&fields=id" + "&filter=" + "updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ") + "\'";
 
 				var me = this;
         $.get(url).done(function(data){

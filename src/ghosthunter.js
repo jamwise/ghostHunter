@@ -51,7 +51,9 @@
 		return str.replace(/^\//, "").replace(/\//g, "-")
 	};
 
-	var lastTimeoutID = null;
+  var lastTimeoutID = null;
+  
+  var ghostRoot = typeof ghost_root_url !== 'undefined' ? ghost_root_url : "/ghost/api/v2";
 
 	// We add a prefix to new IDs and remove it after a set of
 	// updates is complete, just in case a browser freaks over
@@ -92,7 +94,7 @@
 		// console.log('ghostHunter: grabAndIndex');
 		this.blogData = {};
 		this.latestPost = 0;
-    var url = "/ghost/api/v2/content/posts/?key=" + ghosthunter_key + "&limit=all&include=tags";
+    var url = ghostRoot + "/content/posts/?key=" + ghosthunter_key + "&limit=all&include=tags";
 
 		var params = {
 			limit: "all",
@@ -250,7 +252,7 @@
 					fields: "id"
 				};
 
-        var url = "/ghost/api/v2/content/posts/?key=" + ghosthunter_key + "&limit=all&fields=id" + "&filter=" + "updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ") + "\'";
+        var url = ghostRoot + "/content/posts/?key=" + ghosthunter_key + "&limit=all&fields=id" + "&filter=" + "updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ") + "\'";
 
 				var me = this;
         $.get(url).done(function(data){
