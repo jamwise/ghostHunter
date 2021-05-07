@@ -21,7 +21,7 @@
   "homepage": "https://github.com/fbennett/ghostHunter#readme",
   "dependencies": {},
   "devDependencies": {
-    "grunt": "^1.0.1",
+    "grunt": "^1.3.0",
     "grunt-contrib-copy": "^1.0.0"
   }
 }
