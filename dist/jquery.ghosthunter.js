@@ -3165,7 +3165,7 @@ lunr.QueryParser.parseBoost = function (parser) {
 		resultsData			: false,
 		onPageLoad			: false,
 		onKeyUp				: false,
-		result_template 	: "<a id='gh-{{ref}}' class='gh-search-item' href='{{link}}'><p><h2>{{title}}</h2><h4>{{prettyPubDate}}</h4></p></a>",
+		result_template 	: "<a id='gh-{{ref}}' class='gh-search-item' href='{{postLink}}'><p><h2>{{title}}</h2><h4>{{pubDate}}</h4></p></a>",
 		info_template		: "<p>Number of posts found: {{amount}}</p>",
 		displaySearchInfo	: true,
 		zeroResultsInfo		: true,
@@ -3287,7 +3287,7 @@ lunr.QueryParser.parseBoost = function (parser) {
 						title: arrayItem.title,
 						description: arrayItem.custom_excerpt,
 						pubDate: prettyDate(parsedData.pubDate),
-						link: localUrl,
+						postLink: localUrl,
 						tags: tag_arr
 					};
 					// If there is a metadata "pre"-processor for the item, run it here.
