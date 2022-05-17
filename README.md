@@ -31,6 +31,10 @@ GhostHunter makes it easy to add search capability to any Ghost theme, using the
 ------------------
 
 ## Upgrade notes
+
+### GHostHunter v0.6.1
+* Fix usages `ghost_root_url`
+
 ### GhostHunter v0.6.0
 
 * Implements @JiapengLi "dirty fix" to support the new Ghost v2 Content API.
