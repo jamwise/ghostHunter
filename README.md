@@ -1,7 +1,18 @@
+
+# ⚠️ GhostHunter has not been maintained since 2019 
+### There is now a native search feature built-in to Ghost core:
+https://ghost.org/changelog/search/
+
+<br><br><br>
+
+---
+
+<br><br><br>
+
 ![Version](https://img.shields.io/badge/Version-0.6.0-blue.svg)
 ![MinGhostVersion](https://img.shields.io/badge/Min%20Ghost%20v.-%3E%3D%202.10-red.svg)
 
-# ghostHunter
+## ghostHunter
 
 **Original developer:** [jamal@i11u.me](mailto:jamal@i11u.me)
 
